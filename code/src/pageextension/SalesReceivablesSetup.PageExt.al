@@ -6,8 +6,9 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
         {
             group("Auto assigned customer discount group")
             {
-                field("Auto Assigned Cust. Disc. Group"; Rec."IMW Auto-assign Cust.Disc.Gr.")
+                field("IMW Auto-assign Cust.Disc.Gr."; Rec."IMW Auto-assign Cust.Disc.Gr.")
                 {
+                    Caption = 'Auto Assigned Cust. Disc. Group';
                     ApplicationArea = All;
                     ToolTip = 'Turn on/turn of - Auto assigned customer discount group';
 
@@ -26,15 +27,35 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                         //CurrPage.Update();
                     end;
                 }
-                field("Turnover Period"; Rec."IMW Turnover Period")
+                field("IWM Turnover Period"; Rec."IMW Turnover Period")
                 {
+                    Caption = 'Turnover Period';
                     ApplicationArea = All;
                     ToolTip = 'Specifies time range for turnover period count';
+                    trigger OnValidate()
+                    var
+                        OneDayDateFormula: DateFormula;
+                    begin
+                        if not CheckCorectDate(Rec."IMW Turnover Period") then begin
+                            Evaluate(OneDayDateFormula, '1D');
+                            Rec."IMW Turnover Period" := OneDayDateFormula;
+                        end;
+                    end;
                 }
-                field("Period of Validity"; Rec."IMW Period Of Validity")
+                field("IWM Period of Validity"; Rec."IMW Period Of Validity")
                 {
+                    Caption = 'Period of Validity';
                     ApplicationArea = All;
                     ToolTip = 'Specifies time range for period of validity';
+                    trigger OnValidate()
+                    var
+                        OneDayDateFormula: DateFormula;
+                    begin
+                        if not CheckCorectDate(Rec."IMW Period Of Validity") then begin
+                            Evaluate(OneDayDateFormula, '1D');
+                            Rec."IMW Period Of Validity" := OneDayDateFormula;
+                        end;
+                    end;
                 }
             }
         }
@@ -45,6 +66,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
         labelChangeAutoAssignedFromTrue: Label 'Do you want to turn off? All auto-assigned values will lost validity.';
         labelChangeAutoAssignedFromFalse: Label 'Do you want to turn on?';
 
+
     trigger OnOpenPage()
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
@@ -54,11 +76,8 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
     end;
 
     local procedure CheckCorectDate(value: DateFormula): Boolean
-    var
-        ZeroDateFormule: DateFormula;
     begin
-        Evaluate(ZeroDateFormule, '0D');
-        if value = ZeroDateFormule then
+        if Today() < CalcDate(value, Today()) then
             exit(true);
         exit(false);
     end;

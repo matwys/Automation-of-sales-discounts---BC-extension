@@ -8,22 +8,25 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         }
         addafter("Customer Disc. Group")
         {
-            field("Auto-assgined Disc. Expiration Date"; Rec."IMW Auto-ass. Disc.Exp.Date")
+            field("IMW Auto-ass. Disc.Exp.Date"; Rec."IMW Auto-ass. Disc.Exp.Date")
             {
+                Caption = 'Auto-assgined Disc. Expiration Date';
                 ApplicationArea = All;
                 ToolTip = 'Ending Date Of Assigned To Discount Group';
                 Editable = false;
                 Visible = autoAssignCustDiscGroupBool;
             }
-            field("Last Auto-assgined Changed By"; Rec."IMW Last Auto-ass.Changed By")
+            field("IMW Last Auto-ass.Changed By"; Rec."IMW Last Auto-ass.Changed By")
             {
+                Caption = 'Last Auto-assgined Changed By';
                 ApplicationArea = All;
                 ToolTip = 'Last Auto-assgined Changed By';
                 Editable = false;
                 Visible = autoAssignCustDiscGroupBool;
             }
-            field("Last Auto-assgined Changed Date"; Rec."IMW Last Auto-ass.Changed Date")
+            field("IMW Last Auto-ass.Changed Date"; Rec."IMW Last Auto-ass.Changed Date")
             {
+                Caption = 'Last Auto-assgined Changed Date';
                 ApplicationArea = All;
                 ToolTip = 'Last Date Of Auto-assigned To Discount Group';
                 Editable = false;
@@ -46,7 +49,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     begin
         SalesReceivablesSetup.Get();
         autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto-assign Cust.Disc.Gr.";
-        Rec."IMW Auto-ass. Disc.Exp.Date" := Today(); //+ SalesReceivablesSetup."IMW Period Of Validity";
+        Rec."IMW Auto-ass. Disc.Exp.Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
         Rec."IMW Last Auto-ass.Changed Date" := Today;
         Update();
     end;
