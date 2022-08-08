@@ -74,45 +74,45 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
 
     actions
     {
-        addafter(Payment)
-        {
-            group("IMW Release Group")
-            {
-                Caption = 'Release';
-                action("IMW Release")
-                {
-                    Caption = 'Release';
-                    ApplicationArea = All;
-                    Image = ReleaseDoc;
-                    Enabled = Rec."IMW Status" <> Rec."IMW Status"::Released;
-                    ToolTip = 'Release the Requirements Auto-ass Disc. Group to the next stage of processing.';
+        // addafter(Payment)
+        // {
+        //     group("IMW Release Group")
+        //     {
+        //         Caption = 'Release';
+        //         action("IMW Release")
+        //         {
+        //             Caption = 'Release';
+        //             ApplicationArea = All;
+        //             Image = ReleaseDoc;
+        //             Enabled = Rec."IMW Status" <> Rec."IMW Status"::Released;
+        //             ToolTip = 'Release the Requirements Auto-ass Disc. Group to the next stage of processing.';
 
-                    trigger OnAction()
-                    var
-                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
-                    begin
-                        ReleaseOpenAssign.Release();
-                        CurrPage.Update();
-                    end;
-                }
-                action("IMW Open")
-                {
-                    Caption = 'Open';
-                    ApplicationArea = All;
-                    Image = ReOpen;
-                    Enabled = Rec."IMW Status" <> Rec."IMW Status"::"Open";
-                    ToolTip = 'Reopen the Requirements Auto-ass Disc. Group to change it after it has been approved.';
+        //             trigger OnAction()
+        //             var
+        //                 ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+        //             begin
+        //                 ReleaseOpenAssign.Release();
+        //                 CurrPage.Update();
+        //             end;
+        //         }
+        //         action("IMW Open")
+        //         {
+        //             Caption = 'Open';
+        //             ApplicationArea = All;
+        //             Image = ReOpen;
+        //             Enabled = Rec."IMW Status" <> Rec."IMW Status"::"Open";
+        //             ToolTip = 'Reopen the Requirements Auto-ass Disc. Group to change it after it has been approved.';
 
-                    trigger OnAction()
-                    var
-                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
-                    begin
-                        ReleaseOpenAssign.Open();
-                        CurrPage.Update();
-                    end;
-                }
-            }
-        }
+        //             trigger OnAction()
+        //             var
+        //                 ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+        //             begin
+        //                 ReleaseOpenAssign.Open();
+        //                 CurrPage.Update();
+        //             end;
+        //         }
+        //     }
+        // }
     }
 
     var
