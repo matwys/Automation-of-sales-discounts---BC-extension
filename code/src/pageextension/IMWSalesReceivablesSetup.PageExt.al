@@ -4,9 +4,10 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
     {
         addafter(General)
         {
-            group("Auto assigned customer discount group")
+            group("IMW Auto Assigned Customer Discount Group")
             {
-                field("IMW Auto-assign Cust.Disc.Gr."; Rec."IMW Auto-assign Cust.Disc.Gr.")
+                Caption = 'Auto Assigned Customer Discount Group';
+                field("IMW Auto-assign Cust.Disc.Gr."; Rec."IMW Auto Ass. Cust. Disc. Gr.")
                 {
                     Caption = 'Auto Assigned Cust. Disc. Group';
                     ApplicationArea = All;
@@ -15,18 +16,17 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
 
                     trigger OnValidate()
                     begin
-                        if not Rec."IMW Auto-assign Cust.Disc.Gr." then begin
-                            if not Confirm(labelChangeAutoAssignedFromTrue) then begin
-                                Rec."IMW Auto-assign Cust.Disc.Gr." := true;
-                            end
+                        if not Rec."IMW Auto Ass. Cust. Disc. Gr." then begin
+                            if not Confirm(labelChangeAutoAssignedFromTrue) then
+                                Rec."IMW Auto Ass. Cust. Disc. Gr." := true
                             else
                                 Rec."IMW Status" := Rec."IMW Status"::Open;
                         end
                         else
                             if not Confirm(labelChangeAutoAssignedFromFalse) then
-                                Rec."IMW Auto-assign Cust.Disc.Gr." := false;
+                                Rec."IMW Auto Ass. Cust. Disc. Gr." := false;
 
-                        autoAssignCustDiscGroupBool := Rec."IMW Auto-assign Cust.Disc.Gr.";
+                        //autoAssignCustDiscGroupBool := Rec."IMW Auto-assign Cust.Disc.Gr.";
                         CurrPage.Update(true);
                     end;
                 }
@@ -45,7 +45,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                         end;
                     end;
                 }
-                field("IWM Period of Validity"; Rec."IMW Period Of Validity")
+                field("IWM Period Of Validity"; Rec."IMW Period Of Validity")
                 {
                     Caption = 'Period of Validity';
                     ApplicationArea = All;
@@ -89,7 +89,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
 
                     trigger OnAction()
                     var
-                        ReleaseOpenAssign: Codeunit "IMW Release & Open Assign";
+                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                     begin
                         ReleaseOpenAssign.Release();
                         CurrPage.Update();
@@ -105,7 +105,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
 
                     trigger OnAction()
                     var
-                        ReleaseOpenAssign: Codeunit "IMW Release & Open Assign";
+                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                     begin
                         ReleaseOpenAssign.Open();
                         CurrPage.Update();
@@ -126,7 +126,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
         SalesReceivablesSetup.Get();
-        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto-assign Cust.Disc.Gr.";
+        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
     end;
 
     local procedure CheckCorectDate(value: DateFormula): Boolean

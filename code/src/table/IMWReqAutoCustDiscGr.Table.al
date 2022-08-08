@@ -1,7 +1,7 @@
-table 50001 "IMW Req. Auto-ass Disc. Group."
+table 50001 "IMW Req. Auto. Cust. Disc. Gr."
 {
     DataClassification = CustomerContent;
-    Caption = 'Req. Auto-ass Disc. Group.';
+    Caption = 'Req. Auto Ass. Disc. Group.';
 
     fields
     {
@@ -14,7 +14,7 @@ table 50001 "IMW Req. Auto-ass Disc. Group."
         field(10; Required; Decimal)
         {
             DataClassification = CustomerContent;
-            Caption = 'Required value';
+            Caption = 'Required Value';
         }
     }
 

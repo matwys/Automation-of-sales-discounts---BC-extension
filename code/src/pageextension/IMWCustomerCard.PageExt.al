@@ -8,27 +8,27 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         }
         addafter("Customer Disc. Group")
         {
-            field("IMW Auto-ass. Disc.Exp.Date"; Rec."IMW Auto-ass. Disc.Exp.Date")
+            field("IMW Auto Ass. Disc. Exp. Date"; Rec."IMW Auto. Ass. Disc. Exp. Date")
             {
-                Caption = 'Auto-assgined Disc. Expiration Date';
+                Caption = 'Auto Assgined Disc. Expiration Date';
                 ApplicationArea = All;
                 ToolTip = 'Ending Date Of Assigned To Discount Group';
                 Editable = false;
                 Visible = autoAssignCustDiscGroupBool;
             }
-            field("IMW Last Auto-ass.Changed By"; Rec."IMW Last Auto-ass.Changed By")
+            field("IMW Last Auto Ass. Changed By"; Rec."IMW Last Auto. Ass. Ch. By")
             {
-                Caption = 'Last Auto-assgined Changed By';
+                Caption = 'Last Auto Assgined Changed By';
                 ApplicationArea = All;
-                ToolTip = 'Last Auto-assgined Changed By';
+                ToolTip = 'Last Auto Assgined Changed By';
                 Editable = false;
                 Visible = autoAssignCustDiscGroupBool;
             }
-            field("IMW Last Auto-ass.Changed Date"; Rec."IMW Last Auto-ass.Changed Date")
+            field("IMW Last Auto Ass. Changed Date"; Rec."IMW Last Auto Ass. Ch. Date")
             {
-                Caption = 'Last Auto-assgined Changed Date';
+                Caption = 'Last Auto Assgined Changed Date';
                 ApplicationArea = All;
-                ToolTip = 'Last Date Of Auto-assigned To Discount Group';
+                ToolTip = 'Last Date Of Auto Assigned To Discount Group';
                 Editable = false;
                 Visible = autoAssignCustDiscGroupBool;
             }
@@ -48,9 +48,9 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
         SalesReceivablesSetup.Get();
-        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto-assign Cust.Disc.Gr.";
-        Rec."IMW Auto-ass. Disc.Exp.Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
-        Rec."IMW Last Auto-ass.Changed Date" := Today;
+        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
+        Rec."IMW Auto. Ass. Disc. Exp. Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
+        Rec."IMW Last Auto Ass. Ch. Date" := Today;
         Update();
     end;
 }

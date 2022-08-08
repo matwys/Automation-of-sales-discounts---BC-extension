@@ -1,13 +1,17 @@
-codeunit 50001 "IMW Release & Open Assign"
+codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 {
+    // IMW Auto-Assign Disc Group Mgt.
     procedure Release()
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         IsHandled: Boolean;
     begin
-        IsHandled := true;
         IsHandled := CheckZero();
+        if not IsHandled then
+            exit;
         CheckDifferentValue();
+        if not IsHandled then
+            exit;
         if IsHandled then begin
             SalesReceivablesSetup.Get();
             SalesReceivablesSetup.Validate("IMW Status", SalesReceivablesSetup."IMW Status"::Released);
@@ -17,14 +21,14 @@ codeunit 50001 "IMW Release & Open Assign"
 
     local procedure CheckDifferentValue()
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto-ass Disc. Group.";
+    //ReqAutoAssDiscGroup: Record "IMW Req. Auto-ass Disc. Group.";
     begin
 
     end;
 
     local procedure CheckZero(): Boolean
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto-ass Disc. Group.";
+        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
     begin
         ReqAutoAssDiscGroup.SetRange(Required, 0);
         if ReqAutoAssDiscGroup.Count <> 1 then
