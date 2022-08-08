@@ -6,6 +6,7 @@ page 50001 "IMW Req.Auto-assDisc.Gr.List"
     UsageCategory = Lists;
     SourceTable = "IMW Req. Auto-ass Disc. Group.";
 
+
     layout
     {
         area(Content)
@@ -16,6 +17,7 @@ page 50001 "IMW Req.Auto-assDisc.Gr.List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies a code for the customer discount group.';
+
                 }
                 field("Required"; Rec."Required")
                 {
@@ -26,22 +28,30 @@ page 50001 "IMW Req.Auto-assDisc.Gr.List"
         }
     }
 
-    actions
-    {
-        area(Processing)
-        {
-            action(ActionName)
-            {
-                ApplicationArea = All;
+    // actions
+    // {
+    //     area(Processing)
+    //     {
+    //         action(ActionName)
+    //         {
+    //             ApplicationArea = All;
 
-                trigger OnAction()
-                begin
+    //             trigger OnAction()
+    //             begin
 
-                end;
-            }
-        }
-    }
-
+    //             end;
+    //         }
+    //     }
+    // }
     var
-        myInt: Integer;
+        SetupStatus: Boolean;
+
+    trigger OnOpenPage()
+    var
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        SetupStatus := false;
+        if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
+            SetupStatus := true;
+    end;
 }

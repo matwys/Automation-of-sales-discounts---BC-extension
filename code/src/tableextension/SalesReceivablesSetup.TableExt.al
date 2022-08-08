@@ -17,5 +17,10 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             Caption = 'Period of validity';
             DataClassification = CustomerContent;
         }
+        field(50004; "IMW Status"; Enum "IMW Status")
+        {
+            Caption = 'Status';
+            DataClassification = CustomerContent;
+        }
     }
 }

@@ -16,15 +16,18 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     trigger OnValidate()
                     begin
                         if not Rec."IMW Auto-assign Cust.Disc.Gr." then begin
-                            if not Confirm(labelChangeAutoAssignedFromTrue) then
+                            if not Confirm(labelChangeAutoAssignedFromTrue) then begin
                                 Rec."IMW Auto-assign Cust.Disc.Gr." := true;
+                            end
+                            else
+                                Rec."IMW Status" := Rec."IMW Status"::Open;
                         end
                         else
                             if not Confirm(labelChangeAutoAssignedFromFalse) then
                                 Rec."IMW Auto-assign Cust.Disc.Gr." := false;
 
-                        //autoAssignCustDiscGroupBool := Rec."IMW Auto-assign Cust.Disc.Gr.";
-                        //CurrPage.Update();
+                        autoAssignCustDiscGroupBool := Rec."IMW Auto-assign Cust.Disc.Gr.";
+                        CurrPage.Update(true);
                     end;
                 }
                 field("IWM Turnover Period"; Rec."IMW Turnover Period")
@@ -55,6 +58,57 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                             Evaluate(OneDayDateFormula, '1D');
                             Rec."IMW Period Of Validity" := OneDayDateFormula;
                         end;
+                    end;
+                }
+                field("IMW Status"; Rec."IMW Status")
+                {
+                    Caption = 'Status';
+                    ApplicationArea = All;
+                    ToolTip = 'Status of Requirements Auto-ass Disc. Group Page';
+                    Editable = false;
+                    //HideValue = not autoAssignCustDiscGroupBool;
+                }
+            }
+        }
+    }
+
+    actions
+    {
+        addafter(Payment)
+        {
+            group("IMW Release Group")
+            {
+                Caption = 'Release';
+                action("IMW Release")
+                {
+                    Caption = 'Release';
+                    ApplicationArea = All;
+                    Image = ReleaseDoc;
+                    Enabled = Rec."IMW Status" <> Rec."IMW Status"::Released;
+                    ToolTip = 'Release the Requirements Auto-ass Disc. Group to the next stage of processing.';
+
+                    trigger OnAction()
+                    var
+                        ReleaseOpenAssign: Codeunit "IMW Release & Open Assign";
+                    begin
+                        ReleaseOpenAssign.Release();
+                        CurrPage.Update();
+                    end;
+                }
+                action("IMW Open")
+                {
+                    Caption = 'Open';
+                    ApplicationArea = All;
+                    Image = ReOpen;
+                    Enabled = Rec."IMW Status" <> Rec."IMW Status"::"Open";
+                    ToolTip = 'Reopen the Requirements Auto-ass Disc. Group to change it after it has been approved.';
+
+                    trigger OnAction()
+                    var
+                        ReleaseOpenAssign: Codeunit "IMW Release & Open Assign";
+                    begin
+                        ReleaseOpenAssign.Open();
+                        CurrPage.Update();
                     end;
                 }
             }
