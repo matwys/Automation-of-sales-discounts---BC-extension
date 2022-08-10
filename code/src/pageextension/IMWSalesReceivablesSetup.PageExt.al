@@ -17,13 +17,13 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     trigger OnValidate()
                     begin
                         if not Rec."IMW Auto Ass. Cust. Disc. Gr." then begin
-                            if not Confirm(labelChangeAutoAssignedFromTrue) then
+                            if not Confirm(labelChangeAutoAssignedFromTrueQst) then
                                 Rec."IMW Auto Ass. Cust. Disc. Gr." := true
                             else
                                 Rec."IMW Status" := Rec."IMW Status"::Open;
                         end
                         else
-                            if not Confirm(labelChangeAutoAssignedFromFalse) then
+                            if not Confirm(labelChangeAutoAssignedFromFalseQst) then
                                 Rec."IMW Auto Ass. Cust. Disc. Gr." := false;
 
                         //autoAssignCustDiscGroupBool := Rec."IMW Auto-assign Cust.Disc.Gr.";
@@ -116,9 +116,9 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
     }
 
     var
-        autoAssignCustDiscGroupBool: Boolean;
-        labelChangeAutoAssignedFromTrue: Label 'Do you want to turn off? All auto-assigned values will lost validity.';
-        labelChangeAutoAssignedFromFalse: Label 'Do you want to turn on?';
+        //autoAssignCustDiscGroupBool: Boolean;
+        labelChangeAutoAssignedFromTrueQst: Label 'Do you want to turn off? All auto-assigned values will lost validity.';
+        labelChangeAutoAssignedFromFalseQst: Label 'Do you want to turn on?';
 
 
     trigger OnOpenPage()
@@ -126,7 +126,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
         SalesReceivablesSetup.Get();
-        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
+        //autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
     end;
 
     local procedure CheckCorectDate(value: DateFormula): Boolean

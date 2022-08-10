@@ -6,12 +6,15 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         IsHandled: Boolean;
     begin
         IsHandled := CheckZero();
-        if not IsHandled then
+        if not IsHandled then begin
+            Message(MissingZeroMsg);
             exit;
+        end;
         if IsHandled then begin
             SalesReceivablesSetup.Get();
             SalesReceivablesSetup.Validate("IMW Status", SalesReceivablesSetup."IMW Status"::Released);
             SalesReceivablesSetup.Modify();
+            Message(ChangeForReleasedMsg);
         end;
     end;
 
@@ -32,13 +35,14 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         SalesReceivablesSetup.Get();
         SalesReceivablesSetup.Validate("IMW Status", SalesReceivablesSetup."IMW Status"::Open);
         SalesReceivablesSetup.Modify();
+        Message(ChangeForOpenMsg);
     end;
 
     procedure AutoAssingCustomerToDiscGroup(Customer: Record Customer)
     var
-        SalesBalanc: Decimal;
         "Cust. Ledger Entry": Record "Cust. Ledger Entry";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        SalesBalanc: Decimal;
     begin
         "Cust. Ledger Entry".SetRange("Cust. Ledger Entry"."Customer No.", Customer."No.");
         "Cust. Ledger Entry".SetFilter("Cust. Ledger Entry"."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
@@ -50,6 +54,9 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         Message('Sales (LCY) = %1', SalesBalanc);
 
         Customer.Validate("Customer Disc. Group", FindGroupForCustomer(SalesBalanc));
+        Customer.Validate("IMW Last Auto Ass. Ch. Date", Today);
+        Customer.Validate("IMW Auto. Ass. Disc. Exp. Date", CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today()));
+        Customer.Validate("IMW Last Auto. Ass. Ch. By", UserId);
         Customer.Modify();
         Message('Customer was added to Disc. Group.');
     end;
@@ -63,4 +70,9 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         ReqAutoAssDiscGroup.FindLast();
         exit(ReqAutoAssDiscGroup.Code);
     end;
+
+    var
+        ChangeForOpenMsg: Label 'Status is changed for Open status.';
+        ChangeForReleasedMsg: Label 'Status is changed for Released status.';
+        MissingZeroMsg: Label 'Status is not changed. One record must have 0 in Required.';
 }

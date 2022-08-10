@@ -58,8 +58,8 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
 
                     trigger OnAction()
                     var
-                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                     begin
                         ReleaseOpenAssign.Release();
                         CurrPage.Update();
@@ -80,8 +80,8 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
 
                     trigger OnAction()
                     var
-                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                     begin
                         ReleaseOpenAssign.Open();
                         CurrPage.Update();
