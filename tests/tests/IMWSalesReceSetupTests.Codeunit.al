@@ -28,7 +28,6 @@ codeunit 50100 "IMW Sales & Rece. Setup Tests"
         SalesReceivablesSetup.Modify();
         // [THEN] Value of Auto Assigned Cust. Disc. Group is true.
         Assert.AreEqual(true, SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.", 'IMW Auto Ass. Cust. was changed.');
-
     end;
 
     [ConfirmHandler]
@@ -36,6 +35,34 @@ codeunit 50100 "IMW Sales & Rece. Setup Tests"
     begin
         Reply := false;
     end;
+
+    [HandlerFunctions('ExpectedConfirmHandlerTrue')]
+    [Test]
+    procedure CheckIfUserSelectYesFromConfirmWindow()
+    var
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        // [Scenerio]
+        Initialize();
+        // [GIVEN] On start value of Auto Assigned Cust. Disc. Group is true.
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." := true;
+        SalesReceivablesSetup.Modify();
+        // [WHEN] Value of Auto Assigned Cust. Disc. is changed for false. Option "Yes" is selected from Confirm window. 
+        SalesReceivablesSetup.Validate("IMW Auto Ass. Cust. Disc. Gr.", false);
+        SalesReceivablesSetup.Modify();
+        // [THEN] Value of Auto Assigned Cust. Disc. Group is false.
+        Assert.AreEqual(false, SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.", 'IMW Auto Ass. Cust. was changed.');
+    end;
+
+    [ConfirmHandler]
+    procedure ExpectedConfirmHandlerTrue(Question: Text[1024]; var Reply: Boolean)
+    begin
+        Reply := true;
+    end;
+
+
 
     local procedure Initialize();
     var
