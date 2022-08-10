@@ -1,0 +1,10 @@
+# ALTB
+.alpackages/
+.alcache/
+.altemplates/
+.altestrunner/
+launch.json
+rad.json
+*.app
+*.g.xlf
+!.gitignore
