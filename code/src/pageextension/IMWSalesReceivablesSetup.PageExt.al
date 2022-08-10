@@ -35,30 +35,12 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     Caption = 'Turnover Period';
                     ApplicationArea = All;
                     ToolTip = 'Specifies time range for turnover period count';
-                    trigger OnValidate()
-                    var
-                        OneDayDateFormula: DateFormula;
-                    begin
-                        if not CheckCorectDateMinus(Rec."IMW Turnover Period") then begin
-                            Evaluate(OneDayDateFormula, '-1D');
-                            Rec."IMW Turnover Period" := OneDayDateFormula;
-                        end;
-                    end;
                 }
                 field("IWM Period Of Validity"; Rec."IMW Period Of Validity")
                 {
                     Caption = 'Period of Validity';
                     ApplicationArea = All;
                     ToolTip = 'Specifies time range for period of validity';
-                    trigger OnValidate()
-                    var
-                        OneDayDateFormula: DateFormula;
-                    begin
-                        if not CheckCorectDate(Rec."IMW Period Of Validity") then begin
-                            Evaluate(OneDayDateFormula, '1D');
-                            Rec."IMW Period Of Validity" := OneDayDateFormula;
-                        end;
-                    end;
                 }
                 field("IMW Status"; Rec."IMW Status")
                 {
@@ -66,7 +48,6 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     ApplicationArea = All;
                     ToolTip = 'Status of Requirements Auto-ass Disc. Group Page';
                     Editable = false;
-                    //HideValue = not autoAssignCustDiscGroupBool;
                 }
             }
         }
@@ -127,19 +108,5 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
     begin
         SalesReceivablesSetup.Get();
         //autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
-    end;
-
-    local procedure CheckCorectDate(value: DateFormula): Boolean
-    begin
-        if Today() < CalcDate(value, Today()) then
-            exit(true);
-        exit(false);
-    end;
-
-    local procedure CheckCorectDateMinus(value: DateFormula): Boolean
-    begin
-        if Today() > CalcDate(value, Today()) then
-            exit(true);
-        exit(false);
     end;
 }

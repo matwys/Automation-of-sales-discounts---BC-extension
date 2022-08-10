@@ -28,12 +28,32 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             Caption = 'Turnover period';
             DataClassification = CustomerContent;
             InitValue = "-90D";
+
+            trigger OnValidate()
+            var
+                OneDayDateFormula: DateFormula;
+            begin
+                if not CheckCorectDateMinus(Rec."IMW Turnover Period") then begin
+                    Evaluate(OneDayDateFormula, '-1D');
+                    Rec."IMW Turnover Period" := OneDayDateFormula;
+                end;
+            end;
         }
         field(50003; "IMW Period Of Validity"; DateFormula)
         {
             Caption = 'Period Of Validity';
             DataClassification = CustomerContent;
             InitValue = "30D";
+
+            trigger OnValidate()
+            var
+                OneDayDateFormula: DateFormula;
+            begin
+                if not CheckCorectDate(Rec."IMW Period Of Validity") then begin
+                    Evaluate(OneDayDateFormula, '1D');
+                    Rec."IMW Period Of Validity" := OneDayDateFormula;
+                end;
+            end;
         }
         field(50004; "IMW Status"; Enum "IMW Status")
         {
@@ -46,4 +66,18 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
     var
         labelChangeAutoAssignedFromTrueQst: Label 'Do you want to turn off? All auto-assigned values will lost validity.';
         labelChangeAutoAssignedFromFalseQst: Label 'Do you want to turn on?';
+
+    local procedure CheckCorectDate(value: DateFormula): Boolean
+    begin
+        if Today() < CalcDate(value, Today()) then
+            exit(true);
+        exit(false);
+    end;
+
+    local procedure CheckCorectDateMinus(value: DateFormula): Boolean
+    begin
+        if Today() > CalcDate(value, Today()) then
+            exit(true);
+        exit(false);
+    end;
 }

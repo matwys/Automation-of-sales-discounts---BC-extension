@@ -15,6 +15,16 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
         {
             DataClassification = CustomerContent;
             Caption = 'Required Value';
+
+            trigger OnValidate()
+            var
+                ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+            begin
+                ReqAutoAssDiscGroup.SetRange(Required, Rec."Required");
+                ReqAutoAssDiscGroup.SetFilter(Code, '<>%1', Rec.Code);
+                if ReqAutoAssDiscGroup.Count <> 0 then
+                    Error(InvalideValueErr);
+            end;
         }
     }
 
@@ -29,6 +39,8 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
 
         }
     }
+    var
+        InvalideValueErr: Label 'Invalide value.';
 
     trigger OnInsert()
     begin
