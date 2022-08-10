@@ -24,6 +24,10 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
         {
             Clustered = true;
         }
+        key(Key2; Required)
+        {
+
+        }
     }
 
     trigger OnInsert()

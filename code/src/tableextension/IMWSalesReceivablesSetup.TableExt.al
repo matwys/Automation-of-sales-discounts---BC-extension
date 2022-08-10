@@ -11,7 +11,7 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
         {
             Caption = 'Turnover period';
             DataClassification = CustomerContent;
-            InitValue = "90D";
+            InitValue = "-90D";
         }
         field(50003; "IMW Period Of Validity"; DateFormula)
         {
@@ -23,6 +23,7 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
         {
             Caption = 'Status';
             DataClassification = CustomerContent;
+            InitValue = "open";
 
         }
     }

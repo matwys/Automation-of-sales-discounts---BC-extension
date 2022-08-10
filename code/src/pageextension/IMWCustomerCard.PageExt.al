@@ -38,16 +38,42 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     actions
     {
         // Add changes to page actions here
+        addafter("Sales Journal")
+        {
+            action("IMW Auto Ass. To Disc. Gr.")
+            {
+                Caption = 'Auto Assign To Disc. Group';
+                ApplicationArea = All;
+                Image = ReleaseDoc;
+                Enabled = not SetupStatus;
+                Visible = autoAssignCustDiscGroupBool;
+                ToolTip = 'Auto Assign Customer to Discount Group by Balance.';
+
+                trigger OnAction()
+                var
+                    AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+
+                begin
+                    AutoAssignDiscGrMgt.AutoAssingCustomerToDiscGroup(Rec);
+
+                end;
+            }
+        }
     }
 
     var
         autoAssignCustDiscGroupBool: Boolean;
+        SetupStatus: Boolean;
 
     trigger OnOpenPage()
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+
     begin
         SalesReceivablesSetup.Get();
+        SetupStatus := false;
+        if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
+            SetupStatus := true;
         autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
         Rec."IMW Auto. Ass. Disc. Exp. Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
         Rec."IMW Last Auto Ass. Ch. Date" := Today;

@@ -39,8 +39,8 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     var
                         OneDayDateFormula: DateFormula;
                     begin
-                        if not CheckCorectDate(Rec."IMW Turnover Period") then begin
-                            Evaluate(OneDayDateFormula, '1D');
+                        if not CheckCorectDateMinus(Rec."IMW Turnover Period") then begin
+                            Evaluate(OneDayDateFormula, '-1D');
                             Rec."IMW Turnover Period" := OneDayDateFormula;
                         end;
                     end;
@@ -132,6 +132,13 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
     local procedure CheckCorectDate(value: DateFormula): Boolean
     begin
         if Today() < CalcDate(value, Today()) then
+            exit(true);
+        exit(false);
+    end;
+
+    local procedure CheckCorectDateMinus(value: DateFormula): Boolean
+    begin
+        if Today() > CalcDate(value, Today()) then
             exit(true);
         exit(false);
     end;
