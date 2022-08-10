@@ -8,12 +8,16 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             DataClassification = CustomerContent;
 
             trigger OnValidate()
+            var
+                AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
             begin
                 if not Rec."IMW Auto Ass. Cust. Disc. Gr." then begin
                     if not Confirm(labelChangeAutoAssignedFromTrueQst) then
                         Rec."IMW Auto Ass. Cust. Disc. Gr." := true
-                    else
+                    else begin
                         Rec."IMW Status" := Rec."IMW Status"::Open;
+                        AutoAssignDiscGrMgt.TurnOff();
+                    end;
                 end
                 else
                     if not Confirm(labelChangeAutoAssignedFromFalseQst) then

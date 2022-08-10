@@ -49,9 +49,9 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                     trigger OnAction()
                     var
                         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                        AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                     begin
-                        ReleaseOpenAssign.Release();
+                        AutoAssignDiscGrMgt.Release();
                         CurrPage.Update();
 
                         SalesReceivablesSetup.Get();
@@ -71,9 +71,9 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                     trigger OnAction()
                     var
                         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-                        ReleaseOpenAssign: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                        AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
                     begin
-                        ReleaseOpenAssign.Open();
+                        AutoAssignDiscGrMgt.Open();
                         CurrPage.Update();
 
                         SalesReceivablesSetup.Get();
@@ -82,6 +82,21 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                             SetupStatus := true;
                     end;
                 }
+            }
+            action("IWM Auto Ass. All Cust. To Disc. Gr.")
+            {
+                Caption = 'Auto Assign All Cust. To Disc. Group';
+                ApplicationArea = All;
+                Image = ReleaseDoc;
+                Enabled = not SetupStatus;
+                ToolTip = 'Auto Assign All Customers to Discount Group by Balance.';
+
+                trigger OnAction()
+                var
+                    AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                begin
+                    AutoAssignDiscGrMgt.AutoAssingAllCustomersToDiscGroup()
+                end;
             }
         }
     }
