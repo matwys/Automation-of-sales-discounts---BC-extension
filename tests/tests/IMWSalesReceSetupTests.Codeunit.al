@@ -1,4 +1,4 @@
-codeunit 50100 "IMW Sales & Rece. Setup Tests"
+codeunit 50100 "IMW  Auto Ass. Cust. Tests"
 {
     Subtype = Test;
 
@@ -62,20 +62,48 @@ codeunit 50100 "IMW Sales & Rece. Setup Tests"
         Reply := true;
     end;
 
+    [HandlerFunctions('ExpectedMessageHandler')]
+    [Test]
+    procedure StatusChangeForReleased()
+    var
+        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        IMWReqAutoDiscGrList: TestPage "IMW Req. Auto Disc. Gr. List";
+    begin
+        // [Scenerio]
+        Initialize();
+        // [GIVEN] In IMW Req. Auto. Cust. Disc. Gr. table only one record has value 0 in required field. Status is "Open".
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW Status" := SalesReceivablesSetup."IMW Status"::Open;
+        SalesReceivablesSetup.Modify();
+        // [WHEN] "Release" action is started in Requirements Auto Ass. Disc. Group page.
+        IMWReqAutoDiscGrList.OpenEdit();
+        IMWReqAutoDiscGrList."IMW Release".Invoke();
+        // [THEN] Status is changed for "Released".
+        SalesReceivablesSetup.Get();
+        Assert.AreEqual(SalesReceivablesSetup."IMW Status"::Released, SalesReceivablesSetup."IMW Status", 'IMW Status is not changed for Released');
+    end;
+
+    [MessageHandler]
+    procedure ExpectedMessageHandler(Msg: Text[1024])
+    begin
+    end;
+
 
 
     local procedure Initialize();
     var
         LibraryTestInitialize: Codeunit "Library - Test Initialize";
     begin
-        LibraryTestInitialize.OnTestInitialize(Codeunit::"IMW Sales & Rece. Setup Tests");
+        LibraryTestInitialize.OnTestInitialize(Codeunit::"IMW  Auto Ass. Cust. Tests");
         ClearLastError();
         LibraryVariableStorage.Clear();
         LibrarySetupStorage.Restore();
         if IsInitialized then
             exit;
 
-        LibraryTestInitialize.OnBeforeTestSuiteInitialize(Codeunit::"IMW Sales & Rece. Setup Tests");
+        LibraryTestInitialize.OnBeforeTestSuiteInitialize(Codeunit::"IMW  Auto Ass. Cust. Tests");
 
         LibraryRandom.Init();
 
@@ -89,6 +117,6 @@ codeunit 50100 "IMW Sales & Rece. Setup Tests"
         // This is done InMemory, so it could be run after the COMMIT above
         //   LibrarySetupStorage.Save(DATABASE::"[SETUP TABLE ID]");
 
-        LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"IMW Sales & Rece. Setup Tests");
+        LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"IMW  Auto Ass. Cust. Tests");
     end;
 }
