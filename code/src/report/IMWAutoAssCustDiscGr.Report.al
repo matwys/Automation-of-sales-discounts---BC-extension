@@ -1,9 +1,9 @@
 report 50001 "IMW Auto Ass. Cust. Disc. Gr."
 {
     UsageCategory = ReportsAndAnalysis;
-    ApplicationArea = All;
     ProcessingOnly = true;
     Caption = 'Auto Assign All Customers To Discount Groups';
+
 
     dataset
     {
@@ -51,7 +51,6 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
     }
     var
         AutoAssignAllCust: Boolean;
-        //Customer2: Record Customer;
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         Counter: Integer;
 }

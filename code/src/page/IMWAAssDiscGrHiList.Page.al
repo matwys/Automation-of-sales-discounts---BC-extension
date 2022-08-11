@@ -20,7 +20,7 @@ page 50002 "IMW A. Ass. Disc. Gr. Hi. List"
                     ApplicationArea = All;
                     ToolTip = 'No.';
                 }
-                field("Cust. No."; Rec."Cust. No.")
+                field("Customer No."; Rec."Customer No.")
                 {
                     Caption = 'Customer No.';
                     ApplicationArea = All;

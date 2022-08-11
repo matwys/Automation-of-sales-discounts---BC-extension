@@ -96,7 +96,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
         // }
     }
 
-    var
+    //var
     //autoAssignCustDiscGroupBool: Boolean;
     // labelChangeAutoAssignedFromTrueQst: Label 'Do you want to turn off? All auto-assigned values will lost validity.';
     // labelChangeAutoAssignedFromFalseQst: Label 'Do you want to turn on?';

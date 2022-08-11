@@ -76,6 +76,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         "Disc. Group. No.": Code[20];
         SalesBalanc: Decimal;
     begin
+        SalesReceivablesSetup.Get();
         "Cust. Ledger Entry".SetRange("Cust. Ledger Entry"."Customer No.", Customer."No.");
         "Cust. Ledger Entry".SetFilter("Cust. Ledger Entry"."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
 
@@ -88,7 +89,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
 
         IMWAutoAssDiscGrHist.Init();
-        IMWAutoAssDiscGrHist."Cust. No." := Customer."No.";
+        IMWAutoAssDiscGrHist."Customer No." := Customer."No.";
         IMWAutoAssDiscGrHist."Cust. Disc. Group Code" := "Disc. Group. No.";
         IMWAutoAssDiscGrHist."IMW Last Auto. Ass. Ch. By" := UserId;
         IMWAutoAssDiscGrHist."IMW Last Auto Ass. Ch. Date" := Today();
@@ -101,7 +102,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         Customer.Modify();
 
         IMWAutoAssDiscGrHist.Init();
-        IMWAutoAssDiscGrHist."Cust. No." := Customer."No.";
+        IMWAutoAssDiscGrHist."Customer No." := Customer."No.";
 
         //Message('Customer was added to Disc. Group.');
     end;

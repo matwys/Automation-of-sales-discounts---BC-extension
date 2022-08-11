@@ -11,7 +11,7 @@ table 50002 "IMW Auto. Ass. Disc. Gr. Hist."
             Caption = 'No.';
             DataClassification = CustomerContent;
         }
-        field(2; "Cust. No."; Code[20])
+        field(2; "Customer No."; Code[20])
         {
             Caption = 'Cust. No.';
             DataClassification = CustomerContent;
@@ -44,7 +44,7 @@ table 50002 "IMW Auto. Ass. Disc. Gr. Hist."
         {
             Clustered = true;
         }
-        key(Key1; "Cust. No.")
+        key(Key1; "Customer No.")
         {
 
         }

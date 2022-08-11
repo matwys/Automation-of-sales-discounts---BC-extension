@@ -4,7 +4,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     {
         modify("Customer Disc. Group")
         {
-            Editable = NOT autoAssignCustDiscGroupBool;
+            Editable = NOT AutoAssignCustDiscGroupBool;
         }
         addafter("Customer Disc. Group")
         {
@@ -14,7 +14,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'Ending Date Of Assigned To Discount Group';
                 Editable = false;
-                Visible = autoAssignCustDiscGroupBool;
+                Visible = AutoAssignCustDiscGroupBool;
             }
             field("IMW Last Auto Ass. Changed By"; Rec."IMW Last Auto. Ass. Ch. By")
             {
@@ -22,7 +22,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'Last Auto Assigned Changed By';
                 Editable = false;
-                Visible = autoAssignCustDiscGroupBool;
+                Visible = AutoAssignCustDiscGroupBool;
             }
             field("IMW Last Auto Ass. Changed Date"; Rec."IMW Last Auto Ass. Ch. Date")
             {
@@ -30,7 +30,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'Last Date Of Auto Assigned To Discount Group';
                 Editable = false;
-                Visible = autoAssignCustDiscGroupBool;
+                Visible = AutoAssignCustDiscGroupBool;
             }
         }
     }
@@ -46,7 +46,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 Image = ReleaseDoc;
                 Enabled = not SetupStatus;
-                Visible = autoAssignCustDiscGroupBool;
+                Visible = AutoAssignCustDiscGroupBool;
                 ToolTip = 'Auto Assign Customer to Discount Group by Balance.';
 
                 trigger OnAction()
@@ -58,11 +58,21 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
 
                 end;
             }
+            action("History Auto Ass. To Disc. Gr.")
+            {
+                Caption = 'History Auto Ass. To Disc. Gr.';
+                ApplicationArea = All;
+                Image = ReleaseDoc;
+                Visible = AutoAssignCustDiscGroupBool;
+                ToolTip = 'View History about Auto Assign To Discount Group.';
+                RunObject = Page "IMW A. Ass. Disc. Gr. Hi. List";
+                RunPageLink = "Customer No." = FIELD("No.");
+            }
         }
     }
 
     var
-        autoAssignCustDiscGroupBool: Boolean;
+        AutoAssignCustDiscGroupBool: Boolean;
         SetupStatus: Boolean;
 
     trigger OnOpenPage()
@@ -74,7 +84,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         SetupStatus := false;
         if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
             SetupStatus := true;
-        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
+        AutoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
         //Rec."IMW Auto. Ass. Disc. Exp. Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
         //Rec."IMW Last Auto Ass. Ch. Date" := Today;
         //Update();
