@@ -1,7 +1,7 @@
 page 50001 "IMW Req. Auto Disc. Gr. List"
 {
     ApplicationArea = All;
-    Caption = 'Requirements Auto Ass. Disc. Group Page';
+    Caption = 'Requirements Auto Ass. Disc. Group';
     PageType = List;
     SourceTable = "IMW Req. Auto. Cust. Disc. Gr.";
     UsageCategory = Lists;
@@ -88,7 +88,7 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                 Caption = 'Auto Assign All Cust. To Disc. Group';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
-                Enabled = not SetupStatus;
+                Enabled = not SetupStatus and autoAssignCustDiscGroupBool;
                 ToolTip = 'Auto Assign All Customers to Discount Group by Balance.';
 
                 trigger OnAction()
@@ -102,7 +102,7 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
     }
     var
         SetupStatus: Boolean;
-
+        autoAssignCustDiscGroupBool: Boolean;
 
     trigger OnOpenPage()
     var
@@ -112,5 +112,6 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
         SetupStatus := false;
         if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
             SetupStatus := true;
+        autoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
     end;
 }

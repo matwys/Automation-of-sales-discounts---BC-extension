@@ -71,7 +71,9 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     procedure AutoAssingCustomerToDiscGroup(Customer: Record Customer)
     var
         "Cust. Ledger Entry": Record "Cust. Ledger Entry";
+        IMWAutoAssDiscGrHist: Record "IMW Auto. Ass. Disc. Gr. Hist.";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        "Disc. Group. No.": Code[20];
         SalesBalanc: Decimal;
     begin
         "Cust. Ledger Entry".SetRange("Cust. Ledger Entry"."Customer No.", Customer."No.");
@@ -83,11 +85,24 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
             until "Cust. Ledger Entry".Next() = 0;
         //Message('Sales (LCY) = %1', SalesBalanc);
 
-        Customer.Validate("Customer Disc. Group", FindGroupForCustomer(SalesBalanc));
+        "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
+
+        IMWAutoAssDiscGrHist.Init();
+        IMWAutoAssDiscGrHist."Cust. No." := Customer."No.";
+        IMWAutoAssDiscGrHist."Cust. Disc. Group Code" := "Disc. Group. No.";
+        IMWAutoAssDiscGrHist."IMW Last Auto. Ass. Ch. By" := UserId;
+        IMWAutoAssDiscGrHist."IMW Last Auto Ass. Ch. Date" := Today();
+        IMWAutoAssDiscGrHist.Insert();
+
+        Customer.Validate("Customer Disc. Group", "Disc. Group. No.");
         Customer.Validate("IMW Last Auto Ass. Ch. Date", Today);
         Customer.Validate("IMW Auto. Ass. Disc. Exp. Date", CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today()));
         Customer.Validate("IMW Last Auto. Ass. Ch. By", UserId);
         Customer.Modify();
+
+        IMWAutoAssDiscGrHist.Init();
+        IMWAutoAssDiscGrHist."Cust. No." := Customer."No.";
+
         //Message('Customer was added to Disc. Group.');
     end;
 
@@ -102,8 +117,8 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     end;
 
     var
+        AllUserAssignQst: Label 'Do you want auto assing all Customers?';
         ChangeForOpenMsg: Label 'Status is changed for Open status.';
         ChangeForReleasedMsg: Label 'Status is changed for Released status.';
         MissingZeroMsg: Label 'Status is not changed. One record must have 0 in Required.';
-        AllUserAssignQst: Label 'Do you want auto assing all Customers?';
 }

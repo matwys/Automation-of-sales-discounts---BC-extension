@@ -7,7 +7,7 @@ tableextension 50002 "IMW Customer" extends Customer
             Caption = 'Auto Assigned Disc. Expiration Date';
             DataClassification = CustomerContent;
         }
-        field(50002; "IMW Last Auto. Ass. Ch. By"; Code[20])
+        field(50002; "IMW Last Auto. Ass. Ch. By"; Code[50])
         {
             Caption = 'Last Auto Assigned Changed By';
             DataClassification = ToBeClassified;
