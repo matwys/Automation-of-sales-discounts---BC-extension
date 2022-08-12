@@ -68,6 +68,7 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
     var
         ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        CustomerDiscountGroup: Record "Customer Discount Group";
         IMWReqAutoDiscGrList: TestPage "IMW Req. Auto Disc. Gr. List";
     begin
         // [Scenerio]
@@ -77,12 +78,78 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
             SalesReceivablesSetup.Init();
         SalesReceivablesSetup."IMW Status" := SalesReceivablesSetup."IMW Status"::Open;
         SalesReceivablesSetup.Modify();
+
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'Gr1';
+        CustomerDiscountGroup.Insert();
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'Gr2';
+        CustomerDiscountGroup.Insert();
+
+        ReqAutoAssDiscGroup.Init();
+        ReqAutoAssDiscGroup.Code := 'Gr1';
+        ReqAutoAssDiscGroup.Required := 0;
+        ReqAutoAssDiscGroup.Insert();
+
+        ReqAutoAssDiscGroup.Init();
+        ReqAutoAssDiscGroup.Code := 'Gr2';
+        ReqAutoAssDiscGroup.Required := 10000;
+        ReqAutoAssDiscGroup.Insert();
+
         // [WHEN] "Release" action is started in Requirements Auto Ass. Disc. Group page.
         IMWReqAutoDiscGrList.OpenEdit();
         IMWReqAutoDiscGrList."IMW Release".Invoke();
         // [THEN] Status is changed for "Released".
+        ReqAutoAssDiscGroup.DeleteAll();
+        CustomerDiscountGroup.DeleteAll();
+
         SalesReceivablesSetup.Get();
         Assert.AreEqual(SalesReceivablesSetup."IMW Status"::Released, SalesReceivablesSetup."IMW Status", 'IMW Status is not changed for Released');
+    end;
+
+    [HandlerFunctions('ExpectedMessageHandler')]
+    [Test]
+    procedure StatusNoChangeForReleased()
+    var
+        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        CustomerDiscountGroup: Record "Customer Discount Group";
+        IMWReqAutoDiscGrList: TestPage "IMW Req. Auto Disc. Gr. List";
+    begin
+        // [Scenerio]
+        Initialize();
+        // [GIVEN] In IMW Req. Auto. Cust. Disc. Gr. table only one record has value 0 in required field. Status is "Open".
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW Status" := SalesReceivablesSetup."IMW Status"::Open;
+        SalesReceivablesSetup.Modify();
+
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'Gr1';
+        CustomerDiscountGroup.Insert();
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'Gr2';
+        CustomerDiscountGroup.Insert();
+
+        ReqAutoAssDiscGroup.Init();
+        ReqAutoAssDiscGroup.Code := 'Gr1';
+        ReqAutoAssDiscGroup.Required := 1000;
+        ReqAutoAssDiscGroup.Insert();
+
+        ReqAutoAssDiscGroup.Init();
+        ReqAutoAssDiscGroup.Code := 'Gr2';
+        ReqAutoAssDiscGroup.Required := 10000;
+        ReqAutoAssDiscGroup.Insert();
+
+        // [WHEN] "Release" action is started in Requirements Auto Ass. Disc. Group page.
+        IMWReqAutoDiscGrList.OpenEdit();
+        IMWReqAutoDiscGrList."IMW Release".Invoke();
+        // [THEN] Status is changed for "Released".
+        ReqAutoAssDiscGroup.DeleteAll();
+        CustomerDiscountGroup.DeleteAll();
+
+        SalesReceivablesSetup.Get();
+        Assert.AreEqual(SalesReceivablesSetup."IMW Status"::Open, SalesReceivablesSetup."IMW Status", 'IMW Status is changed for Released');
     end;
 
     [MessageHandler]
