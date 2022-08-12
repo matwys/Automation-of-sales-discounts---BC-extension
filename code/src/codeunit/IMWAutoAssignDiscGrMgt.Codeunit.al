@@ -157,10 +157,30 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
             Error(RemoveDiscGroupErr);
     end;
 
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterOnInsert', '', false, false)]
+    // local procedure OnAfterOnInsertSalesHeader(var SalesHeader: Record "Sales Header")
+    // begin
+    //     Message('test');
+    // end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterValidateEvent', 'Sell-to Customer No.', false, false)]
+    local procedure OnAfterValidateEventSalesHeader(var Rec: Record "Sales Header")
+    var
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        Customer: Record Customer;
+    begin
+        SalesReceivablesSetup.Get();
+        Customer.get(Rec."Sell-to Customer No.");
+        if SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." then
+            if Customer."IMW Auto. Ass. Disc. Exp. Date" < Today() then
+                Error(NewDocumentErr);
+    end;
+
     var
         AllUserAssignQst: Label 'Do you want auto assing all Customers?';
         ChangeForOpenMsg: Label 'Status is changed for Open status.';
         ChangeForReleasedMsg: Label 'Status is changed for Released status.';
         MissingZeroMsg: Label 'Status is not changed. One record must have 0 in Required.';
         RemoveDiscGroupErr: Label 'Exist record in Requirements Auto Ass. Disc. Group. First must be removed.';
+        NewDocumentErr: Label 'Invalid assign to discount group.';
 }
