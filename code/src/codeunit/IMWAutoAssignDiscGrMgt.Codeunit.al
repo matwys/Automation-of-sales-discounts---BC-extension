@@ -147,9 +147,20 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         Customer."IMW Last Auto. Ass. Ch. By" := UserId;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Customer Discount Group", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
+    var
+        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+    begin
+        ReqAutoAssDiscGroup.SetRange(ReqAutoAssDiscGroup.Code, Rec.Code);
+        if ReqAutoAssDiscGroup.Count > 0 then
+            Error(RemoveDiscGroupErr);
+    end;
+
     var
         AllUserAssignQst: Label 'Do you want auto assing all Customers?';
         ChangeForOpenMsg: Label 'Status is changed for Open status.';
         ChangeForReleasedMsg: Label 'Status is changed for Released status.';
         MissingZeroMsg: Label 'Status is not changed. One record must have 0 in Required.';
+        RemoveDiscGroupErr: Label 'Exist record in Requirements Auto Ass. Disc. Group. First must be removed.';
 }

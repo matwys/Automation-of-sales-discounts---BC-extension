@@ -41,6 +41,7 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
     }
     var
         InvalideValueErr: Label 'Invalide value.';
+        RemoveReqDiscGroupErr: Label 'Status is Released. Record can not be removed.';
 
     trigger OnInsert()
     begin
@@ -53,8 +54,12 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
     end;
 
     trigger OnDelete()
+    var
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
-
+        SalesReceivablesSetup.Get();
+        if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Open then
+            Error(RemoveReqDiscGroupErr);
     end;
 
     trigger OnRename()
