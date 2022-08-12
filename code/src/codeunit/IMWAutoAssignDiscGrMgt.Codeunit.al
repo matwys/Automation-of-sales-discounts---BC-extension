@@ -84,8 +84,6 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
             repeat
                 SalesBalanc := SalesBalanc + "Cust. Ledger Entry"."Sales (LCY)";
             until "Cust. Ledger Entry".Next() = 0;
-        //Message('Sales (LCY) = %1', SalesBalanc);
-
         "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
 
         IMWAutoAssDiscGrHist.Init();
@@ -100,11 +98,6 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         Customer.Validate("IMW Auto. Ass. Disc. Exp. Date", CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today()));
         Customer.Validate("IMW Last Auto. Ass. Ch. By", UserId);
         Customer.Modify();
-
-        IMWAutoAssDiscGrHist.Init();
-        IMWAutoAssDiscGrHist."Customer No." := Customer."No.";
-
-        //Message('Customer was added to Disc. Group.');
     end;
 
     local procedure FindGroupForCustomer(SalesBalanc: Decimal): Code[20]
@@ -115,6 +108,43 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         ReqAutoAssDiscGroup.SetCurrentKey("Required");
         ReqAutoAssDiscGroup.FindLast();
         exit(ReqAutoAssDiscGroup.Code);
+    end;
+
+    // [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterValidateEvent', 'No.', false, false)]
+    // local procedure OnAfterValidateEvent(var Rec: Record Customer)
+    // var
+    //     IMWAutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+    //     SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    // begin
+    //     SalesReceivablesSetup.Get();
+    //     Rec.Get();
+    //     if SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." and (SalesReceivablesSetup."IMW Status" = SalesReceivablesSetup."IMW Status"::Released) then
+    //         IMWAutoAssignDiscGrMgt.AutoAssingCustomerToDiscGroup(Rec);
+    // end;
+
+    [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterOnInsert', '', false, false)]
+    local procedure OnAfterOnInsert(var Customer: Record Customer; xCustomer: Record Customer)
+    var
+        IMWAutoAssDiscGrHist: Record "IMW Auto. Ass. Disc. Gr. Hist.";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        "Disc. Group. No.": Code[20];
+    begin
+        SalesReceivablesSetup.Get();
+        if not ((SalesReceivablesSetup."IMW Status"::Released = SalesReceivablesSetup."IMW Status") and SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.") then
+            exit;
+
+        "Disc. Group. No." := FindGroupForCustomer(0);
+        IMWAutoAssDiscGrHist.Init();
+        IMWAutoAssDiscGrHist."Customer No." := Customer."No.";
+        IMWAutoAssDiscGrHist."Cust. Disc. Group Code" := "Disc. Group. No.";
+        IMWAutoAssDiscGrHist."IMW Last Auto. Ass. Ch. By" := UserId;
+        IMWAutoAssDiscGrHist."IMW Last Auto Ass. Ch. Date" := Today();
+        IMWAutoAssDiscGrHist.Insert();
+
+        Customer."Customer Disc. Group" := "Disc. Group. No.";
+        Customer."IMW Last Auto Ass. Ch. Date" := Today;
+        Customer."IMW Auto. Ass. Disc. Exp. Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
+        Customer."IMW Last Auto. Ass. Ch. By" := UserId;
     end;
 
     var

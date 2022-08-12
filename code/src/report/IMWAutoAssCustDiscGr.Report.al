@@ -50,7 +50,7 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
         }
     }
     var
-        AutoAssignAllCust: Boolean;
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        AutoAssignAllCust: Boolean;
         Counter: Integer;
 }
