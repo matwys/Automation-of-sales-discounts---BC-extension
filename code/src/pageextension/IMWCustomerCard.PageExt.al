@@ -57,6 +57,9 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
 
                 end;
             }
+        }
+        addlast(History)
+        {
             action("History Auto Ass. To Disc. Gr.")
             {
                 Caption = 'History Of Auto Assign To Disc. Group';
@@ -84,8 +87,5 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
             SetupStatus := true;
         AutoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
-        //Rec."IMW Auto. Ass. Disc. Exp. Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
-        //Rec."IMW Last Auto Ass. Ch. Date" := Today;
-        //Update();
     end;
 }

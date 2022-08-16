@@ -21,12 +21,12 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                     Editable = SetupStatus;
                     ToolTip = 'Specifies a code for the customer discount group.';
                 }
-                field("Treshold Amount"; Rec."Treshold Amount")
+                field("Threshold Amount"; Rec.Threshold)
                 {
                     ApplicationArea = All;
-                    Caption = 'Treshold Amount';
+                    Caption = 'Threshold Amount';
                     Editable = SetupStatus;
-                    ToolTip = 'Specifies a requirement for the customer discount group.';
+                    ToolTip = 'Specifies A Threshold For The Customer Disc. Group.';
                 }
             }
         }
@@ -84,21 +84,6 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                     end;
                 }
             }
-            // action("IWM Auto Ass. All Cust. To Disc. Gr.")
-            // {
-            //     Caption = 'Auto Assign All Cust. To Disc. Group';
-            //     ApplicationArea = All;
-            //     Image = ReleaseDoc;
-            //     Enabled = not SetupStatus and AutoAssignCustDiscGroupBool;
-            //     ToolTip = 'Auto Assign All Customers to Discount Group by Balance.';
-
-            //     trigger OnAction()
-            //     var
-            //         AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
-            //     begin
-            //         AutoAssignDiscGrMgt.AutoAssingAllCustomersToDiscGroup()
-            //     end;
-            // }
             action("IWM Auto Ass. All Cust. To Disc. Gr. Report")
             {
                 Caption = 'Auto Assign All Cust. To Disc. Group Report';

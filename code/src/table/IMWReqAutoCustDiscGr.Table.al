@@ -11,7 +11,7 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
             Caption = 'Code';
             TableRelation = "Customer Discount Group";
         }
-        field(10; "Treshold Amount"; Decimal)
+        field(10; Threshold; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Treshold Amount';
@@ -20,7 +20,7 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
             var
                 ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
             begin
-                ReqAutoAssDiscGroup.SetRange("Treshold Amount", Rec."Treshold Amount");
+                ReqAutoAssDiscGroup.SetRange(Threshold, Rec.Threshold);
                 ReqAutoAssDiscGroup.SetFilter(Code, '<>%1', Rec.Code);
                 if ReqAutoAssDiscGroup.Count <> 0 then
                     Error(InvalideValueErr);
@@ -34,14 +34,14 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
         {
             Clustered = true;
         }
-        key(Key2; "Treshold Amount")
+        key(Key2; Threshold)
         {
 
         }
     }
     var
-        InvalideValueErr: Label 'Invalide value.';
-        RemoveReqDiscGroupErr: Label 'Status is Released. Record can not be removed.';
+        InvalideValueErr: Label 'Invalide value. Other Threshold has the same value.';
+        RemoveReqDiscGroupErr: Label 'Status of Auto Assign To Disc. Group Setup is Released. Record can not be removed.';
 
 
 

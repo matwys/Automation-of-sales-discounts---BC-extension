@@ -11,7 +11,7 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
         {
             trigger OnPreDataItem()
             begin
-                if not AutoAssignAllCust then
+                if OnlyValidCust then
                     Customer.SetFilter(Customer."IMW Auto. Ass. Disc. Valid To", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()))
             end;
 
@@ -25,7 +25,7 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
 
             trigger OnPostDataItem();
             begin
-                Message('Ready!, %1 Customers were updated.', Counter);
+                Message(CountChangesMsg, Counter);
             end;
         }
     }
@@ -36,13 +36,14 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
         {
             area(Content)
             {
-                group(GroupName)
+                group(Setup)
                 {
-                    field(AutoAssignAllCust; AutoAssignAllCust)
+                    Caption = 'Auto Assign Setup';
+                    field(OnlyValidCust; OnlyValidCust)
                     {
                         ApplicationArea = All;
-                        Caption = 'Auto. Assign All Cust. To Disc. Group';
-                        ToolTip = 'Customers with valid assign will be assigned again.';
+                        Caption = 'Auto Assign To Disc. Group Only With Invalid Assigned';
+                        ToolTip = 'Customers With Only Invalid Assign Will Be Assigned.';
                     }
                 }
             }
@@ -50,6 +51,7 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
     }
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-        AutoAssignAllCust: Boolean;
+        OnlyValidCust: Boolean;
         Counter: Integer;
+        CountChangesMsg: Label 'Changes: %1';
 }

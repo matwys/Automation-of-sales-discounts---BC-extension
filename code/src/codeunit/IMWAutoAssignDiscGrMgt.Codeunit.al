@@ -22,7 +22,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     var
         ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
     begin
-        ReqAutoAssDiscGroup.SetRange("Treshold Amount", 0);
+        ReqAutoAssDiscGroup.SetRange(Threshold, 0);
         if ReqAutoAssDiscGroup.Count <> 1 then
             exit(false);
         exit(true);
@@ -65,7 +65,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
                 AutoAssingCustomerToDiscGroup(Customer);
                 CountChanges := CountChanges + 1;
             until Customer.Next() = 0;
-        Message('Changes: %1', CountChanges);
+        Message(CountChangesMsg, CountChanges);
     end;
 
     procedure AutoAssingCustomerToDiscGroup(Customer: Record Customer)
@@ -104,23 +104,11 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     var
         ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
     begin
-        ReqAutoAssDiscGroup.SetFilter(ReqAutoAssDiscGroup."Treshold Amount", '<=%1', SalesBalanc);
-        ReqAutoAssDiscGroup.SetCurrentKey("Treshold Amount");
+        ReqAutoAssDiscGroup.SetFilter(ReqAutoAssDiscGroup.Threshold, '<=%1', SalesBalanc);
+        ReqAutoAssDiscGroup.SetCurrentKey(Threshold);
         ReqAutoAssDiscGroup.FindLast();
         exit(ReqAutoAssDiscGroup.Code);
     end;
-
-    // [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterValidateEvent', 'No.', false, false)]
-    // local procedure OnAfterValidateEvent(var Rec: Record Customer)
-    // var
-    //     IMWAutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
-    //     SalesReceivablesSetup: Record "Sales & Receivables Setup";
-    // begin
-    //     SalesReceivablesSetup.Get();
-    //     Rec.Get();
-    //     if SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." and (SalesReceivablesSetup."IMW Status" = SalesReceivablesSetup."IMW Status"::Released) then
-    //         IMWAutoAssignDiscGrMgt.AutoAssingCustomerToDiscGroup(Rec);
-    // end;
 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterOnInsert', '', false, false)]
     local procedure OnAfterOnInsert(var Customer: Record Customer; xCustomer: Record Customer)
@@ -157,12 +145,6 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
             Error(RemoveDiscGroupErr);
     end;
 
-    // [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterOnInsert', '', false, false)]
-    // local procedure OnAfterOnInsertSalesHeader(var SalesHeader: Record "Sales Header")
-    // begin
-    //     Message('test');
-    // end;
-
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterValidateEvent', 'Sell-to Customer No.', false, false)]
     local procedure OnAfterValidateEventSalesHeader(var Rec: Record "Sales Header")
     var
@@ -177,10 +159,11 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     end;
 
     var
-        AllUserAssignQst: Label 'Do you want auto assing all Customers?';
-        ChangeForOpenMsg: Label 'Status is changed for Open status.';
-        ChangeForReleasedMsg: Label 'Status is changed for Released status.';
-        MissingZeroMsg: Label 'Status is not changed. One record must have 0 in Required.';
-        RemoveDiscGroupErr: Label 'Exist record in Requirements Auto Ass. Disc. Group. First must be removed.';
-        NewDocumentErr: Label 'Invalid assign to discount group.';
+        AllUserAssignQst: Label 'Do you want auto assing all Customers to disc. group?';
+        ChangeForOpenMsg: Label 'Status is changed for Open. ';
+        ChangeForReleasedMsg: Label 'Status is changed for Released.';
+        MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';
+        RemoveDiscGroupErr: Label 'Position in Auto Assign Disc. Group Setup page must be removed before delete Customer Disc. Group.';
+        NewDocumentErr: Label 'Customer has invalid assign to Disc. Group. Run action Auto Assign to Disc. Group for this Customer.';
+        CountChangesMsg: Label 'Changes: %1';
 }

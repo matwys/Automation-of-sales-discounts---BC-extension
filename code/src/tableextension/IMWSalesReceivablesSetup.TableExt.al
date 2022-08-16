@@ -22,9 +22,6 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
                 else
                     if not Confirm(labelChangeAutoAssignedFromFalseQst) then
                         Rec."IMW Auto Ass. Cust. Disc. Gr." := false;
-
-                //autoAssignCustDiscGroupBool := Rec."IMW Auto-assign Cust.Disc.Gr.";
-                //CurrPage.Update(true);
             end;
         }
         field(50002; "IMW Turnover Period"; DateFormula)
@@ -68,8 +65,8 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
         }
     }
     var
-        labelChangeAutoAssignedFromTrueQst: Label 'Do you want to turn off? All auto-assigned values will lost validity.';
-        labelChangeAutoAssignedFromFalseQst: Label 'Do you want to turn on?';
+        labelChangeAutoAssignedFromTrueQst: Label 'Do you want to disable the functionality? All auto assign lost validity.';
+        labelChangeAutoAssignedFromFalseQst: Label 'Do you want to enable the functionality?';
 
     local procedure CheckCorectDate(value: DateFormula): Boolean
     begin

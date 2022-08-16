@@ -8,33 +8,34 @@ table 50002 "IMW Auto. Ass. Disc. Gr. Hist."
         field(1; "No."; Integer)
         {
             AutoIncrement = true;
-            Caption = 'No.';
+            Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
         field(2; "Customer No."; Code[20])
         {
-            Caption = 'Cust. No.';
+            Caption = 'Customer No.';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(11; "Cust. Disc. Group Code"; Code[20])
         {
-            Caption = 'Cust. Disc. Group Code';
+            Caption = 'Customer Disc. Group Code';
             DataClassification = CustomerContent;
             Editable = false;
 
         }
         field(12; "IMW Last Auto. Ass. Ch. By"; Code[50])
         {
-            Caption = 'Last Auto Assigned Changed By';
+            Caption = 'Last Auto Assign To Disc. Group Changed By';
             DataClassification = CustomerContent;
             Editable = false;
         }
         field(13; "IMW Last Auto Ass. Ch. Date"; Date)
         {
-            Caption = 'Last Auto Assigned Changed Date';
+            Caption = 'Last Auto Assign To Disc. Group Changed Date';
             DataClassification = CustomerContent;
             Editable = false;
+
         }
     }
 
