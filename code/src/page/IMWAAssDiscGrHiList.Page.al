@@ -1,7 +1,7 @@
 page 50002 "IMW A. Ass. Disc. Gr. Hi. List"
 {
     ApplicationArea = All;
-    Caption = 'Auto Assing To Cust. Disc. Gr. Hist.';
+    Caption = 'Auto Assign To Customer Disc. Group History';
     PageType = List;
     SourceTable = "IMW Auto. Ass. Disc. Gr. Hist.";
     UsageCategory = Lists;
@@ -14,11 +14,12 @@ page 50002 "IMW A. Ass. Disc. Gr. Hi. List"
         {
             repeater(History)
             {
+                Caption = 'History';
                 field("No."; Rec."No.")
                 {
-                    Caption = 'No.';
+                    Caption = 'Entry No.';
                     ApplicationArea = All;
-                    ToolTip = 'No.';
+                    ToolTip = 'Entry No.';
                 }
                 field("Customer No."; Rec."Customer No.")
                 {
@@ -28,21 +29,21 @@ page 50002 "IMW A. Ass. Disc. Gr. Hi. List"
                 }
                 field("Cust. Disc. Group Code"; Rec."Cust. Disc. Group Code")
                 {
-                    Caption = 'Cust. Disc. Group Code';
+                    Caption = 'Customer Disc. Group Code';
                     ApplicationArea = All;
-                    ToolTip = 'Cust. Disc. Group Code';
+                    ToolTip = 'Customer Disc. Group Code';
                 }
                 field("IMW Last Auto. Ass. Ch. By"; Rec."IMW Last Auto. Ass. Ch. By")
                 {
-                    Caption = 'Last Auto Assign Changed By';
+                    Caption = 'Last Auto Assign To Disc. Group Changed By';
                     ApplicationArea = All;
-                    ToolTip = 'Last Auto Assign Changed By';
+                    ToolTip = 'Last Auto Assign To Discount Group Changed By';
                 }
                 field("IMW Last Auto Ass. Ch. Date"; Rec."IMW Last Auto Ass. Ch. Date")
                 {
-                    Caption = 'Last Auto Assign Changed Date';
+                    Caption = 'Last Auto Assign To Disc. Group Changed Date';
                     ApplicationArea = All;
-                    ToolTip = 'Last Date Of Auto Assigned To Discount Group';
+                    ToolTip = 'Last Date Of Auto Assigned To Discount Group Changed';
                 }
             }
         }

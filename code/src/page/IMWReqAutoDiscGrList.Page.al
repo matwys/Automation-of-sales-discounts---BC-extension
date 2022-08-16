@@ -1,7 +1,7 @@
 page 50001 "IMW Req. Auto Disc. Gr. List"
 {
     ApplicationArea = All;
-    Caption = 'Requirements Auto Ass. Disc. Group';
+    Caption = 'Auto Assign Disc. Group Setup';
     PageType = List;
     SourceTable = "IMW Req. Auto. Cust. Disc. Gr.";
     UsageCategory = Lists;
@@ -13,17 +13,18 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
         {
             repeater(Groups)
             {
-                field("Code"; Rec."Code")
+                Caption = 'Groups';
+                field("Customer Disc. Gruop Code"; Rec."Code")
                 {
                     ApplicationArea = All;
-                    Caption = 'Code';
+                    Caption = 'Customer Disc. Gruop Code';
                     Editable = SetupStatus;
                     ToolTip = 'Specifies a code for the customer discount group.';
                 }
-                field("Required"; Rec."Required")
+                field("Treshold Amount"; Rec."Treshold Amount")
                 {
                     ApplicationArea = All;
-                    Caption = 'Required';
+                    Caption = 'Treshold Amount';
                     Editable = SetupStatus;
                     ToolTip = 'Specifies a requirement for the customer discount group.';
                 }
@@ -66,7 +67,7 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                     Caption = 'Open';
                     Enabled = not SetupStatus;
                     Image = ReOpen;
-                    ToolTip = 'Reopen the Requirements Auto-ass Disc. Group to change it after it has been approved.';
+                    ToolTip = 'Reopen the Requirements Auto Assign Disc. Group to change it after it has been approved.';
 
                     trigger OnAction()
                     var
@@ -83,21 +84,21 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
                     end;
                 }
             }
-            action("IWM Auto Ass. All Cust. To Disc. Gr.")
-            {
-                Caption = 'Auto Assign All Cust. To Disc. Group';
-                ApplicationArea = All;
-                Image = ReleaseDoc;
-                Enabled = not SetupStatus and AutoAssignCustDiscGroupBool;
-                ToolTip = 'Auto Assign All Customers to Discount Group by Balance.';
+            // action("IWM Auto Ass. All Cust. To Disc. Gr.")
+            // {
+            //     Caption = 'Auto Assign All Cust. To Disc. Group';
+            //     ApplicationArea = All;
+            //     Image = ReleaseDoc;
+            //     Enabled = not SetupStatus and AutoAssignCustDiscGroupBool;
+            //     ToolTip = 'Auto Assign All Customers to Discount Group by Balance.';
 
-                trigger OnAction()
-                var
-                    AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
-                begin
-                    AutoAssignDiscGrMgt.AutoAssingAllCustomersToDiscGroup()
-                end;
-            }
+            //     trigger OnAction()
+            //     var
+            //         AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+            //     begin
+            //         AutoAssignDiscGrMgt.AutoAssingAllCustomersToDiscGroup()
+            //     end;
+            // }
             action("IWM Auto Ass. All Cust. To Disc. Gr. Report")
             {
                 Caption = 'Auto Assign All Cust. To Disc. Group Report';

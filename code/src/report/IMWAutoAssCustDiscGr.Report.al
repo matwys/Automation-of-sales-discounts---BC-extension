@@ -11,9 +11,8 @@ report 50001 "IMW Auto Ass. Cust. Disc. Gr."
         {
             trigger OnPreDataItem()
             begin
-                clear(Customer);
                 if not AutoAssignAllCust then
-                    Customer.SetFilter(Customer."IMW Auto. Ass. Disc. Exp. Date", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()))
+                    Customer.SetFilter(Customer."IMW Auto. Ass. Disc. Valid To", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()))
             end;
 
             trigger OnAfterGetRecord()

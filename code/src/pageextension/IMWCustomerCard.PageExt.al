@@ -8,27 +8,27 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         }
         addafter("Customer Disc. Group")
         {
-            field("IMW Auto Ass. Disc. Exp. Date"; Rec."IMW Auto. Ass. Disc. Exp. Date")
+            field("IMW Auto. Ass. Disc. Valid To"; Rec."IMW Auto. Ass. Disc. Valid To")
             {
-                Caption = 'Auto Assigned Disc. Expiration Date';
+                Caption = 'Auto Assign Disc. To Disc. Valid To';
                 ApplicationArea = All;
-                ToolTip = 'Ending Date Of Assigned To Discount Group';
+                ToolTip = 'Ending Date Of Valid Auto Assign To Disc. Group';
                 Editable = false;
                 Visible = AutoAssignCustDiscGroupBool;
             }
-            field("IMW Last Auto Ass. Changed By"; Rec."IMW Last Auto. Ass. Ch. By")
+            field("IMW Last Auto. Ass. Ch. By"; Rec."IMW Last Auto. Ass. Ch. By")
             {
-                Caption = 'Last Auto Assigned Changed By';
+                Caption = 'Last Auto Assign To Disc. Group Changed By';
                 ApplicationArea = All;
-                ToolTip = 'Last Auto Assigned Changed By';
+                ToolTip = 'Last Auto Assign To Disc. Group Changed By';
                 Editable = false;
                 Visible = AutoAssignCustDiscGroupBool;
             }
-            field("IMW Last Auto Ass. Changed Date"; Rec."IMW Last Auto Ass. Ch. Date")
+            field("IMW Last Auto Ass. Ch. Date"; Rec."IMW Last Auto Ass. Ch. Date")
             {
-                Caption = 'Last Auto Assigned Changed Date';
+                Caption = 'Last Auto Assign To Disc. Group Changed Date';
                 ApplicationArea = All;
-                ToolTip = 'Last Date Of Auto Assigned To Discount Group';
+                ToolTip = 'Last Auto Assign To Disc. Group Changed Date';
                 Editable = false;
                 Visible = AutoAssignCustDiscGroupBool;
             }
@@ -37,7 +37,6 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
 
     actions
     {
-        // Add changes to page actions here
         addafter("Sales Journal")
         {
             action("IMW Auto Ass. To Disc. Gr.")
@@ -60,11 +59,11 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
             }
             action("History Auto Ass. To Disc. Gr.")
             {
-                Caption = 'History Auto Ass. To Disc. Gr.';
+                Caption = 'History Of Auto Assign To Disc. Group';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
                 Visible = AutoAssignCustDiscGroupBool;
-                ToolTip = 'View History about Auto Assign To Discount Group.';
+                ToolTip = 'View History About Auto Assign To Discount Group.';
                 RunObject = Page "IMW A. Ass. Disc. Gr. Hi. List";
                 RunPageLink = "Customer No." = FIELD("No.");
             }

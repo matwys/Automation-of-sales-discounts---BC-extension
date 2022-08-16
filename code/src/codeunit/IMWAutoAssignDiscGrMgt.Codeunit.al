@@ -22,7 +22,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     var
         ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
     begin
-        ReqAutoAssDiscGroup.SetRange(Required, 0);
+        ReqAutoAssDiscGroup.SetRange("Treshold Amount", 0);
         if ReqAutoAssDiscGroup.Count <> 1 then
             exit(false);
         exit(true);
@@ -44,7 +44,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     begin
         if Customer.FindSet() then
             repeat
-                Customer."IMW Auto. Ass. Disc. Exp. Date" := 0D;
+                Customer."IMW Auto. Ass. Disc. Valid To" := 0D;
                 Customer."IMW Last Auto Ass. Ch. Date" := 0D;
                 Customer."IMW Last Auto. Ass. Ch. By" := '';
                 Customer.Modify();
@@ -58,7 +58,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         CountChanges: Integer;
     begin
         if not Confirm(AllUserAssignQst) then
-            Customer.SetFilter(Customer."IMW Auto. Ass. Disc. Exp. Date", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
+            Customer.SetFilter(Customer."IMW Auto. Ass. Disc. Valid To", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
         CountChanges := 0;
         if Customer.FindSet() then
             repeat
@@ -95,7 +95,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 
         Customer.Validate("Customer Disc. Group", "Disc. Group. No.");
         Customer.Validate("IMW Last Auto Ass. Ch. Date", Today);
-        Customer.Validate("IMW Auto. Ass. Disc. Exp. Date", CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today()));
+        Customer.Validate("IMW Auto. Ass. Disc. Valid To", CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today()));
         Customer.Validate("IMW Last Auto. Ass. Ch. By", UserId);
         Customer.Modify();
     end;
@@ -104,8 +104,8 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     var
         ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
     begin
-        ReqAutoAssDiscGroup.SetFilter(ReqAutoAssDiscGroup.Required, '<=%1', SalesBalanc);
-        ReqAutoAssDiscGroup.SetCurrentKey("Required");
+        ReqAutoAssDiscGroup.SetFilter(ReqAutoAssDiscGroup."Treshold Amount", '<=%1', SalesBalanc);
+        ReqAutoAssDiscGroup.SetCurrentKey("Treshold Amount");
         ReqAutoAssDiscGroup.FindLast();
         exit(ReqAutoAssDiscGroup.Code);
     end;
@@ -143,7 +143,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 
         Customer."Customer Disc. Group" := "Disc. Group. No.";
         Customer."IMW Last Auto Ass. Ch. Date" := Today;
-        Customer."IMW Auto. Ass. Disc. Exp. Date" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
+        Customer."IMW Auto. Ass. Disc. Valid To" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
         Customer."IMW Last Auto. Ass. Ch. By" := UserId;
     end;
 
@@ -172,7 +172,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         SalesReceivablesSetup.Get();
         Customer.get(Rec."Sell-to Customer No.");
         if SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." then
-            if Customer."IMW Auto. Ass. Disc. Exp. Date" < Today() then
+            if Customer."IMW Auto. Ass. Disc. Valid To" < Today() then
                 Error(NewDocumentErr);
     end;
 

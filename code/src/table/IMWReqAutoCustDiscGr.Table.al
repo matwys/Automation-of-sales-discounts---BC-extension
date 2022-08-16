@@ -11,16 +11,16 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
             Caption = 'Code';
             TableRelation = "Customer Discount Group";
         }
-        field(10; Required; Decimal)
+        field(10; "Treshold Amount"; Decimal)
         {
             DataClassification = CustomerContent;
-            Caption = 'Required Value';
+            Caption = 'Treshold Amount';
 
             trigger OnValidate()
             var
                 ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
             begin
-                ReqAutoAssDiscGroup.SetRange(Required, Rec."Required");
+                ReqAutoAssDiscGroup.SetRange("Treshold Amount", Rec."Treshold Amount");
                 ReqAutoAssDiscGroup.SetFilter(Code, '<>%1', Rec.Code);
                 if ReqAutoAssDiscGroup.Count <> 0 then
                     Error(InvalideValueErr);
@@ -34,7 +34,7 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
         {
             Clustered = true;
         }
-        key(Key2; Required)
+        key(Key2; "Treshold Amount")
         {
 
         }
@@ -43,15 +43,7 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
         InvalideValueErr: Label 'Invalide value.';
         RemoveReqDiscGroupErr: Label 'Status is Released. Record can not be removed.';
 
-    trigger OnInsert()
-    begin
 
-    end;
-
-    trigger OnModify()
-    begin
-
-    end;
 
     trigger OnDelete()
     var
@@ -62,9 +54,5 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
             Error(RemoveReqDiscGroupErr);
     end;
 
-    trigger OnRename()
-    begin
-
-    end;
 
 }
