@@ -1,4 +1,4 @@
-codeunit 50100 "IMW  Auto Ass. Cust. Tests"
+codeunit 50100 "IMW AA Cust. Disc. Gr. Tests"
 {
     Subtype = Test;
 
@@ -21,13 +21,13 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
         // [GIVEN] On start value of Auto Assigned Cust. Disc. Group is true.
         If not SalesReceivablesSetup.Get() then
             SalesReceivablesSetup.Init();
-        SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." := true;
+        SalesReceivablesSetup."IMW AA Cust. Disc. Gr." := true;
         SalesReceivablesSetup.Modify();
         // [WHEN] Value of Auto Assigned Cust. Disc. is changed for false. Option "No" is selected from Confirm window. 
-        SalesReceivablesSetup.Validate("IMW Auto Ass. Cust. Disc. Gr.", false);
+        SalesReceivablesSetup.Validate("IMW AA Cust. Disc. Gr.", false);
         SalesReceivablesSetup.Modify();
         // [THEN] Value of Auto Assigned Cust. Disc. Group is true.
-        Assert.AreEqual(true, SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.", 'IMW Auto Ass. Cust. was changed.');
+        Assert.AreEqual(true, SalesReceivablesSetup."IMW AA Cust. Disc. Gr.", 'IMW Auto Ass. Cust. was changed.');
     end;
 
     [ConfirmHandler]
@@ -47,13 +47,13 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
         // [GIVEN] On start value of Auto Assigned Cust. Disc. Group is true.
         If not SalesReceivablesSetup.Get() then
             SalesReceivablesSetup.Init();
-        SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." := true;
+        SalesReceivablesSetup."IMW AA Cust. Disc. Gr." := true;
         SalesReceivablesSetup.Modify();
         // [WHEN] Value of Auto Assigned Cust. Disc. is changed for false. Option "Yes" is selected from Confirm window. 
-        SalesReceivablesSetup.Validate("IMW Auto Ass. Cust. Disc. Gr.", false);
+        SalesReceivablesSetup.Validate("IMW AA Cust. Disc. Gr.", false);
         SalesReceivablesSetup.Modify();
         // [THEN] Value of Auto Assigned Cust. Disc. Group is false.
-        Assert.AreEqual(false, SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.", 'IMW Auto Ass. Cust. was changed.');
+        Assert.AreEqual(false, SalesReceivablesSetup."IMW AA Cust. Disc. Gr.", 'IMW Auto Ass. Cust. was changed.');
     end;
 
     [ConfirmHandler]
@@ -66,17 +66,17 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
     [Test]
     procedure StatusChangeForReleased()
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         CustomerDiscountGroup: Record "Customer Discount Group";
-        IMWReqAutoDiscGrList: TestPage "IMW Req. Auto Disc. Gr. List";
+        IMWAACustDiscGrSetupTestPage: TestPage "IMW AA Cust. Disc. Gr. Setup";
     begin
         // [Scenerio]
         Initialize();
         // [GIVEN] In IMW Req. Auto. Cust. Disc. Gr. table only one record has value 0 in required field. Status is "Open".
         If not SalesReceivablesSetup.Get() then
             SalesReceivablesSetup.Init();
-        SalesReceivablesSetup."IMW Status" := SalesReceivablesSetup."IMW Status"::Open;
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Open;
         SalesReceivablesSetup.Modify();
 
         CustomerDiscountGroup.Init();
@@ -86,42 +86,42 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
         CustomerDiscountGroup.Code := 'Gr2';
         CustomerDiscountGroup.Insert();
 
-        ReqAutoAssDiscGroup.Init();
-        ReqAutoAssDiscGroup.Code := 'Gr1';
-        ReqAutoAssDiscGroup.Required := 0;
-        ReqAutoAssDiscGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'Gr1';
+        IMWAACustDiscGrSetup."Treshold Amount" := 0;
+        IMWAACustDiscGrSetup.Insert();
 
-        ReqAutoAssDiscGroup.Init();
-        ReqAutoAssDiscGroup.Code := 'Gr2';
-        ReqAutoAssDiscGroup.Required := 10000;
-        ReqAutoAssDiscGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'Gr2';
+        IMWAACustDiscGrSetup."Treshold Amount" := 10000;
+        IMWAACustDiscGrSetup.Insert();
 
         // [WHEN] "Release" action is started in Requirements Auto Ass. Disc. Group page.
-        IMWReqAutoDiscGrList.OpenEdit();
-        IMWReqAutoDiscGrList."IMW Release".Invoke();
+        IMWAACustDiscGrSetupTestPage.OpenEdit();
+        IMWAACustDiscGrSetupTestPage."IMW Release".Invoke();
         // [THEN] Status is changed for "Released".
-        ReqAutoAssDiscGroup.DeleteAll();
+        IMWAACustDiscGrSetup.DeleteAll();
         CustomerDiscountGroup.DeleteAll();
 
         SalesReceivablesSetup.Get();
-        Assert.AreEqual(SalesReceivablesSetup."IMW Status"::Released, SalesReceivablesSetup."IMW Status", 'IMW Status is not changed for Released');
+        Assert.AreEqual(SalesReceivablesSetup."IMW AA Status"::Released, SalesReceivablesSetup."IMW AA Status", 'IMW Status is not changed for Released');
     end;
 
     [HandlerFunctions('ExpectedMessageHandler')]
     [Test]
     procedure StatusNoChangeForReleased()
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         CustomerDiscountGroup: Record "Customer Discount Group";
-        IMWReqAutoDiscGrList: TestPage "IMW Req. Auto Disc. Gr. List";
+        IMWAACustDiscGrSetupTestPage: TestPage "IMW AA Cust. Disc. Gr. Setup";
     begin
         // [Scenerio]
         Initialize();
         // [GIVEN] In IMW Req. Auto. Cust. Disc. Gr. table only one record has value 0 in required field. Status is "Open".
         If not SalesReceivablesSetup.Get() then
             SalesReceivablesSetup.Init();
-        SalesReceivablesSetup."IMW Status" := SalesReceivablesSetup."IMW Status"::Open;
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Open;
         SalesReceivablesSetup.Modify();
 
         CustomerDiscountGroup.Init();
@@ -131,25 +131,25 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
         CustomerDiscountGroup.Code := 'Gr2';
         CustomerDiscountGroup.Insert();
 
-        ReqAutoAssDiscGroup.Init();
-        ReqAutoAssDiscGroup.Code := 'Gr1';
-        ReqAutoAssDiscGroup.Required := 1000;
-        ReqAutoAssDiscGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'Gr1';
+        IMWAACustDiscGrSetup."Treshold Amount" := 1000;
+        IMWAACustDiscGrSetup.Insert();
 
-        ReqAutoAssDiscGroup.Init();
-        ReqAutoAssDiscGroup.Code := 'Gr2';
-        ReqAutoAssDiscGroup.Required := 10000;
-        ReqAutoAssDiscGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'Gr2';
+        IMWAACustDiscGrSetup."Treshold Amount" := 10000;
+        IMWAACustDiscGrSetup.Insert();
 
         // [WHEN] "Release" action is started in Requirements Auto Ass. Disc. Group page.
-        IMWReqAutoDiscGrList.OpenEdit();
-        IMWReqAutoDiscGrList."IMW Release".Invoke();
+        IMWAACustDiscGrSetupTestPage.OpenEdit();
+        IMWAACustDiscGrSetupTestPage."IMW Release".Invoke();
         // [THEN] Status is changed for "Released".
-        ReqAutoAssDiscGroup.DeleteAll();
+        IMWAACustDiscGrSetup.DeleteAll();
         CustomerDiscountGroup.DeleteAll();
 
         SalesReceivablesSetup.Get();
-        Assert.AreEqual(SalesReceivablesSetup."IMW Status"::Open, SalesReceivablesSetup."IMW Status", 'IMW Status is changed for Released');
+        Assert.AreEqual(SalesReceivablesSetup."IMW AA Status"::Open, SalesReceivablesSetup."IMW AA Status", 'IMW Status is changed for Released');
     end;
 
     [MessageHandler]
@@ -163,14 +163,14 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
     var
         LibraryTestInitialize: Codeunit "Library - Test Initialize";
     begin
-        LibraryTestInitialize.OnTestInitialize(Codeunit::"IMW  Auto Ass. Cust. Tests");
+        LibraryTestInitialize.OnTestInitialize(Codeunit::"IMW AA Cust. Disc. Gr. Tests");
         ClearLastError();
         LibraryVariableStorage.Clear();
         LibrarySetupStorage.Restore();
         if IsInitialized then
             exit;
 
-        LibraryTestInitialize.OnBeforeTestSuiteInitialize(Codeunit::"IMW  Auto Ass. Cust. Tests");
+        LibraryTestInitialize.OnBeforeTestSuiteInitialize(Codeunit::"IMW AA Cust. Disc. Gr. Tests");
 
         LibraryRandom.Init();
 
@@ -184,6 +184,6 @@ codeunit 50100 "IMW  Auto Ass. Cust. Tests"
         // This is done InMemory, so it could be run after the COMMIT above
         //   LibrarySetupStorage.Save(DATABASE::"[SETUP TABLE ID]");
 
-        LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"IMW  Auto Ass. Cust. Tests");
+        LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"IMW AA Cust. Disc. Gr. Tests");
     end;
 }
