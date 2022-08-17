@@ -51,23 +51,6 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
             until Customer.Next() = 0;
     end;
 
-    procedure AutoAssingAllCustomersToDiscGroup()
-    var
-        Customer: Record Customer;
-        SalesReceivablesSetup: Record "Sales & Receivables Setup";
-        CountChanges: Integer;
-    begin
-        if not Confirm(AllUserAAQst) then
-            Customer.SetFilter(Customer."IMW AA Disc. Valid To", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
-        CountChanges := 0;
-        if Customer.FindSet() then
-            repeat
-                AutoAssignCustomerToDiscGroup(Customer);
-                CountChanges := CountChanges + 1;
-            until Customer.Next() = 0;
-        Message(CountChangesMsg, CountChanges);
-    end;
-
     procedure AutoAssignCustomerToDiscGroup(Customer: Record Customer)
     var
         CustLedgerEntry: Record "Cust. Ledger Entry";
@@ -159,11 +142,9 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
     end;
 
     var
-        AllUserAAQst: Label 'Do you want auto assing all Customers to disc. group?';
         ChangeForOpenMsg: Label 'Status is changed for Open. ';
         ChangeForReleasedMsg: Label 'Status is changed for Released.';
         MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';
         RemoveDiscGroupErr: Label 'Position in Auto Assign Disc. Group Setup page must be removed before delete Customer Disc. Group.';
         NewDocumentErr: Label 'Customer has invalid assign to Disc. Group. Run action Auto Assign to Disc. Group for this Customer.';
-        CountChangesMsg: Label 'Changes: %1';
 }
