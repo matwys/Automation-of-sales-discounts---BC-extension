@@ -1,4 +1,4 @@
-codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
+codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
 {
     procedure Release()
     var
@@ -20,10 +20,10 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 
     local procedure CheckZero(): Boolean
     var
-        ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
+        AADiscGroupSetup: Record "IMW AA Cust. Disc. Gr. Setup";
     begin
-        ReqAutoAssDiscGroup.SetRange("Treshold Amount", 0);
-        if ReqAutoAssDiscGroup.Count <> 1 then
+        AADiscGroupSetup.SetRange("Treshold Amount", 0);
+        if AADiscGroupSetup.Count <> 1 then
             exit(false);
         exit(true);
     end;
@@ -57,41 +57,41 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         CountChanges: Integer;
     begin
-        if not Confirm(AllUserAssignQst) then
+        if not Confirm(AllUserAAQst) then
             Customer.SetFilter(Customer."IMW AA Disc. Valid To", '<%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
         CountChanges := 0;
         if Customer.FindSet() then
             repeat
-                AutoAssingCustomerToDiscGroup(Customer);
+                AutoAssignCustomerToDiscGroup(Customer);
                 CountChanges := CountChanges + 1;
             until Customer.Next() = 0;
         Message(CountChangesMsg, CountChanges);
     end;
 
-    procedure AutoAssingCustomerToDiscGroup(Customer: Record Customer)
+    procedure AutoAssignCustomerToDiscGroup(Customer: Record Customer)
     var
-        "Cust. Ledger Entry": Record "Cust. Ledger Entry";
-        IMWAutoAssDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
+        CustLedgerEntry: Record "Cust. Ledger Entry";
+        IMWAAToDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         "Disc. Group. No.": Code[20];
         SalesBalanc: Decimal;
     begin
         SalesReceivablesSetup.Get();
-        "Cust. Ledger Entry".SetRange("Cust. Ledger Entry"."Customer No.", Customer."No.");
-        "Cust. Ledger Entry".SetFilter("Cust. Ledger Entry"."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
+        CustLedgerEntry.SetRange(CustLedgerEntry."Customer No.", Customer."No.");
+        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
 
-        if "Cust. Ledger Entry".FindSet() then
+        if CustLedgerEntry.FindSet() then
             repeat
-                SalesBalanc := SalesBalanc + "Cust. Ledger Entry"."Sales (LCY)";
-            until "Cust. Ledger Entry".Next() = 0;
+                SalesBalanc := SalesBalanc + CustLedgerEntry."Sales (LCY)";
+            until CustLedgerEntry.Next() = 0;
         "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
 
-        IMWAutoAssDiscGrHist.Init();
-        IMWAutoAssDiscGrHist."Customer No." := Customer."No.";
-        IMWAutoAssDiscGrHist."Customer Disc. Group Code" := "Disc. Group. No.";
-        IMWAutoAssDiscGrHist."IMW Last AA Ch. By" := UserId;
-        IMWAutoAssDiscGrHist."IMW Last AA Ch. Date" := Today();
-        IMWAutoAssDiscGrHist.Insert();
+        IMWAAToDiscGrHist.Init();
+        IMWAAToDiscGrHist."Customer No." := Customer."No.";
+        IMWAAToDiscGrHist."Customer Disc. Group Code" := "Disc. Group. No.";
+        IMWAAToDiscGrHist."IMW Last AA Ch. By" := UserId;
+        IMWAAToDiscGrHist."IMW Last AA Ch. Date" := Today();
+        IMWAAToDiscGrHist.Insert();
 
         Customer.Validate("Customer Disc. Group", "Disc. Group. No.");
         Customer.Validate("IMW Last AA Ch. Date", Today);
@@ -102,18 +102,18 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 
     local procedure FindGroupForCustomer(SalesBalanc: Decimal): Code[20]
     var
-        ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
     begin
-        ReqAutoAssDiscGroup.SetFilter(ReqAutoAssDiscGroup."Treshold Amount", '<=%1', SalesBalanc);
-        ReqAutoAssDiscGroup.SetCurrentKey("Treshold Amount");
-        ReqAutoAssDiscGroup.FindLast();
-        exit(ReqAutoAssDiscGroup.Code);
+        IMWAACustDiscGrSetup.SetFilter(IMWAACustDiscGrSetup."Treshold Amount", '<=%1', SalesBalanc);
+        IMWAACustDiscGrSetup.SetCurrentKey("Treshold Amount");
+        IMWAACustDiscGrSetup.FindLast();
+        exit(IMWAACustDiscGrSetup.Code);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterOnInsert', '', false, false)]
     local procedure OnAfterOnInsert(var Customer: Record Customer; xCustomer: Record Customer)
     var
-        IMWAutoAssDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
+        IMWAAToDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         "Disc. Group. No.": Code[20];
     begin
@@ -122,12 +122,12 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
             exit;
 
         "Disc. Group. No." := FindGroupForCustomer(0);
-        IMWAutoAssDiscGrHist.Init();
-        IMWAutoAssDiscGrHist."Customer No." := Customer."No.";
-        IMWAutoAssDiscGrHist."Customer Disc. Group Code" := "Disc. Group. No.";
-        IMWAutoAssDiscGrHist."IMW Last AA Ch. By" := UserId;
-        IMWAutoAssDiscGrHist."IMW Last AA Ch. Date" := Today();
-        IMWAutoAssDiscGrHist.Insert();
+        IMWAAToDiscGrHist.Init();
+        IMWAAToDiscGrHist."Customer No." := Customer."No.";
+        IMWAAToDiscGrHist."Customer Disc. Group Code" := "Disc. Group. No.";
+        IMWAAToDiscGrHist."IMW Last AA Ch. By" := UserId;
+        IMWAAToDiscGrHist."IMW Last AA Ch. Date" := Today();
+        IMWAAToDiscGrHist.Insert();
 
         Customer."Customer Disc. Group" := "Disc. Group. No.";
         Customer."IMW Last AA Ch. Date" := Today;
@@ -138,10 +138,10 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     [EventSubscriber(ObjectType::Table, Database::"Customer Discount Group", 'OnBeforeDeleteEvent', '', false, false)]
     local procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
     var
-        ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
     begin
-        ReqAutoAssDiscGroup.SetRange(ReqAutoAssDiscGroup.Code, Rec.Code);
-        if ReqAutoAssDiscGroup.Count > 0 then
+        IMWAACustDiscGrSetup.SetRange(IMWAACustDiscGrSetup.Code, Rec.Code);
+        if IMWAACustDiscGrSetup.Count > 0 then
             Error(RemoveDiscGroupErr);
     end;
 
@@ -159,7 +159,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     end;
 
     var
-        AllUserAssignQst: Label 'Do you want auto assing all Customers to disc. group?';
+        AllUserAAQst: Label 'Do you want auto assing all Customers to disc. group?';
         ChangeForOpenMsg: Label 'Status is changed for Open. ';
         ChangeForReleasedMsg: Label 'Status is changed for Released.';
         MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';

@@ -20,11 +20,11 @@ report 50001 "IMW AA Cust. To Disc. Group"
 
             trigger OnAfterGetRecord()
             var
-                AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
             begin
                 if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then
                     exit;
-                AutoAssignDiscGrMgt.AutoAssingCustomerToDiscGroup(Customer);
+                IMWAACustDiscGrMgt.AutoAssignCustomerToDiscGroup(Customer);
                 Counter := Counter + 1;
             end;
 

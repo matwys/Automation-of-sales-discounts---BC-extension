@@ -51,10 +51,9 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
 
                 trigger OnAction()
                 var
-                    AADiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
-
+                    IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
                 begin
-                    AADiscGrMgt.AutoAssingCustomerToDiscGroup(Rec);
+                    IMWAACustDiscGrMgt.AutoAssignCustomerToDiscGroup(Rec);
 
                 end;
             }

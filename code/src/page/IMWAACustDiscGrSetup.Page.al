@@ -50,9 +50,9 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
                     trigger OnAction()
                     var
                         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-                        AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                        IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
                     begin
-                        AutoAssignDiscGrMgt.Release();
+                        IMWAACustDiscGrMgt.Release();
                         CurrPage.Update();
 
                         SalesReceivablesSetup.Get();
@@ -72,7 +72,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
                     trigger OnAction()
                     var
                         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-                        AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                        AutoAssignDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
                     begin
                         AutoAssignDiscGrMgt.Open();
                         CurrPage.Update();

@@ -9,14 +9,14 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
 
             trigger OnValidate()
             var
-                AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
+                IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
             begin
                 if not Rec."IMW AA Cust. Disc. Gr." then begin
                     if not Confirm(labelChangeAutoAssignFromTrueQst) then
                         Rec."IMW AA Cust. Disc. Gr." := true
                     else begin
                         Rec."IMW AA Status" := Rec."IMW AA Status"::Open;
-                        AutoAssignDiscGrMgt.TurnOff();
+                        IMWAACustDiscGrMgt.TurnOff();
                     end;
                 end
                 else
