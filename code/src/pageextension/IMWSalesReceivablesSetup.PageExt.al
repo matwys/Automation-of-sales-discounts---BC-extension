@@ -6,7 +6,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
         {
             group("IMW Auto Assigned Customer Discount Group")
             {
-                Caption = 'Auto Assigned Customer To Disc. Group';
+                Caption = 'Auto Assign Customer To Disc. Group';
                 field("IMW Auto Assign Cust.Disc.Gr."; Rec."IMW AA Cust. Disc. Gr.")
                 {
                     Caption = 'Enable Functionality';

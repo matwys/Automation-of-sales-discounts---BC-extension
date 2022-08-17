@@ -14,7 +14,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
             repeater(Groups)
             {
                 Caption = 'Groups';
-                field("Customer Disc. Gruop Code"; Rec."Code")
+                field("Customer Disc. Group Code"; Rec."Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Customer Disc. Gruop Code';
