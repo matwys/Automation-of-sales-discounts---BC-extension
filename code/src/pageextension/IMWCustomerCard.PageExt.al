@@ -37,7 +37,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
 
     actions
     {
-        addafter("Sales Journal")
+        addafter("Prices and Discounts Overview")
         {
             action("IMW Auto Ass. To Disc. Gr.")
             {
@@ -67,7 +67,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 Image = ReleaseDoc;
                 Visible = AutoAssignCustDiscGroupBool;
                 ToolTip = 'View History About Auto Assign To Discount Group.';
-                RunObject = Page "IMW A. Ass. Disc. Gr. Hi. List";
+                RunObject = Page "IMW AA Disc. Gr. Hi. List";
                 RunPageLink = "Customer No." = FIELD("No.");
             }
         }

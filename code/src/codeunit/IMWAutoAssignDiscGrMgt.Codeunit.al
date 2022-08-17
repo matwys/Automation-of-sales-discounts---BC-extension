@@ -20,7 +20,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 
     local procedure CheckZero(): Boolean
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
     begin
         ReqAutoAssDiscGroup.SetRange(Threshold, 0);
         if ReqAutoAssDiscGroup.Count <> 1 then
@@ -71,7 +71,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     procedure AutoAssingCustomerToDiscGroup(Customer: Record Customer)
     var
         "Cust. Ledger Entry": Record "Cust. Ledger Entry";
-        IMWAutoAssDiscGrHist: Record "IMW Auto. Ass. Disc. Gr. Hist.";
+        IMWAutoAssDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         "Disc. Group. No.": Code[20];
         SalesBalanc: Decimal;
@@ -102,7 +102,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
 
     local procedure FindGroupForCustomer(SalesBalanc: Decimal): Code[20]
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
     begin
         ReqAutoAssDiscGroup.SetFilter(ReqAutoAssDiscGroup.Threshold, '<=%1', SalesBalanc);
         ReqAutoAssDiscGroup.SetCurrentKey(Threshold);
@@ -113,7 +113,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterOnInsert', '', false, false)]
     local procedure OnAfterOnInsert(var Customer: Record Customer; xCustomer: Record Customer)
     var
-        IMWAutoAssDiscGrHist: Record "IMW Auto. Ass. Disc. Gr. Hist.";
+        IMWAutoAssDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         "Disc. Group. No.": Code[20];
     begin
@@ -138,7 +138,7 @@ codeunit 50001 "IMW Auto Assign Disc. Gr. Mgt."
     [EventSubscriber(ObjectType::Table, Database::"Customer Discount Group", 'OnBeforeDeleteEvent', '', false, false)]
     local procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
     var
-        ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+        ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
     begin
         ReqAutoAssDiscGroup.SetRange(ReqAutoAssDiscGroup.Code, Rec.Code);
         if ReqAutoAssDiscGroup.Count > 0 then

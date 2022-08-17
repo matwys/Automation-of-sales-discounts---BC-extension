@@ -1,7 +1,7 @@
-table 50002 "IMW Auto. Ass. Disc. Gr. Hist."
+table 50002 "IMW AA To Disc. Gr. Hist."
 {
     DataClassification = ToBeClassified;
-    Caption = 'Auto Assing To Cust. Disc. Gr. Hist.';
+    Caption = 'Auto Assing To Customer Disc. Group History';
 
     fields
     {

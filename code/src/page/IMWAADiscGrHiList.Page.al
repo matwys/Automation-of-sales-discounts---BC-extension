@@ -1,9 +1,9 @@
-page 50002 "IMW A. Ass. Disc. Gr. Hi. List"
+page 50002 "IMW AA Disc. Gr. Hi. List"
 {
     ApplicationArea = All;
-    Caption = 'Auto Assign To Customer Disc. Group History';
+    Caption = 'Auto Assign Customer To Disc. Group History';
     PageType = List;
-    SourceTable = "IMW Auto. Ass. Disc. Gr. Hist.";
+    SourceTable = "IMW AA To Disc. Gr. Hist.";
     UsageCategory = Lists;
     ModifyAllowed = false;
     InsertAllowed = false;

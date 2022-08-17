@@ -1,7 +1,7 @@
-table 50001 "IMW Req. Auto. Cust. Disc. Gr."
+table 50001 "IMW AA Cust. Disc. Gr. Setup"
 {
     DataClassification = CustomerContent;
-    Caption = 'Req. Auto Ass. Disc. Group.';
+    Caption = 'Auto Assign Customer To Disc. Group Setup';
 
     fields
     {
@@ -18,7 +18,7 @@ table 50001 "IMW Req. Auto. Cust. Disc. Gr."
 
             trigger OnValidate()
             var
-                ReqAutoAssDiscGroup: Record "IMW Req. Auto. Cust. Disc. Gr.";
+                ReqAutoAssDiscGroup: Record "IMW AA Cust. Disc. Gr. Setup";
             begin
                 ReqAutoAssDiscGroup.SetRange(Threshold, Rec.Threshold);
                 ReqAutoAssDiscGroup.SetFilter(Code, '<>%1', Rec.Code);

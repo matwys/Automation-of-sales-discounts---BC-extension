@@ -1,9 +1,9 @@
-page 50001 "IMW Req. Auto Disc. Gr. List"
+page 50001 "IMW AA Cust. Disc. Gr. Setup"
 {
     ApplicationArea = All;
-    Caption = 'Auto Assign Disc. Group Setup';
+    Caption = 'Auto Assign Customer To Disc. Group Setup';
     PageType = List;
-    SourceTable = "IMW Req. Auto. Cust. Disc. Gr.";
+    SourceTable = "IMW AA Cust. Disc. Gr. Setup";
     UsageCategory = Lists;
 
 
@@ -94,7 +94,7 @@ page 50001 "IMW Req. Auto Disc. Gr. List"
 
                 trigger OnAction()
                 var
-                    IMWAutoAssCustDiscGr: Report "IMW Auto Ass. Cust. Disc. Gr.";
+                    IMWAutoAssCustDiscGr: Report "IMW AA Cust. To Disc. Group";
                 begin
                     IMWAutoAssCustDiscGr.Run();
                 end;

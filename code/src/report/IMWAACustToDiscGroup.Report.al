@@ -1,4 +1,4 @@
-report 50001 "IMW Auto Ass. Cust. Disc. Gr."
+report 50001 "IMW AA Cust. To Disc. Group"
 {
     Caption = 'Auto Assign All Customers To Discount Groups';
     ProcessingOnly = true;
