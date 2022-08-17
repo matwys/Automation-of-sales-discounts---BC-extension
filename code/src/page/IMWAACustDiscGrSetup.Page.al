@@ -21,7 +21,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
                     Editable = SetupStatus;
                     ToolTip = 'Specifies a code for the customer discount group.';
                 }
-                field("Threshold Amount"; Rec.Threshold)
+                field("Threshold Amount"; Rec."Treshold Amount")
                 {
                     ApplicationArea = All;
                     Caption = 'Threshold Amount';
@@ -57,7 +57,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
 
                         SalesReceivablesSetup.Get();
                         SetupStatus := false;
-                        if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
+                        if SalesReceivablesSetup."IMW AA Status" <> SalesReceivablesSetup."IMW AA Status"::Released then
                             SetupStatus := true;
                     end;
                 }
@@ -79,7 +79,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
 
                         SalesReceivablesSetup.Get();
                         SetupStatus := false;
-                        if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
+                        if SalesReceivablesSetup."IMW AA Status" <> SalesReceivablesSetup."IMW AA Status"::Released then
                             SetupStatus := true;
                     end;
                 }
@@ -89,7 +89,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
                 Caption = 'Auto Assign All Cust. To Disc. Group Report';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
-                Enabled = not SetupStatus and AutoAssignCustDiscGroupBool;
+                Enabled = not SetupStatus and AACustDiscGroupEnable;
                 ToolTip = 'Auto Assign All Customers to Discount Group by Balance. With Report.';
 
                 trigger OnAction()
@@ -103,7 +103,7 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
     }
     var
         SetupStatus: Boolean;
-        AutoAssignCustDiscGroupBool: Boolean;
+        AACustDiscGroupEnable: Boolean;
 
     trigger OnOpenPage()
     var
@@ -111,8 +111,8 @@ page 50001 "IMW AA Cust. Disc. Gr. Setup"
     begin
         SalesReceivablesSetup.Get();
         SetupStatus := false;
-        if SalesReceivablesSetup."IMW Status" <> SalesReceivablesSetup."IMW Status"::Released then
+        if SalesReceivablesSetup."IMW AA Status" <> SalesReceivablesSetup."IMW AA Status"::Released then
             SetupStatus := true;
-        AutoAssignCustDiscGroupBool := SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr.";
+        AACustDiscGroupEnable := SalesReceivablesSetup."IMW AA Cust. Disc. Gr.";
     end;
 }

@@ -2,7 +2,7 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
 {
     fields
     {
-        field(50001; "IMW Auto Ass. Cust. Disc. Gr."; Boolean)
+        field(50001; "IMW AA Cust. Disc. Gr."; Boolean)
         {
             Caption = 'Auto Assigned Customer Discount Group';
             DataClassification = CustomerContent;
@@ -11,22 +11,22 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             var
                 AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
             begin
-                if not Rec."IMW Auto Ass. Cust. Disc. Gr." then begin
-                    if not Confirm(labelChangeAutoAssignedFromTrueQst) then
-                        Rec."IMW Auto Ass. Cust. Disc. Gr." := true
+                if not Rec."IMW AA Cust. Disc. Gr." then begin
+                    if not Confirm(labelChangeAutoAssignFromTrueQst) then
+                        Rec."IMW AA Cust. Disc. Gr." := true
                     else begin
-                        Rec."IMW Status" := Rec."IMW Status"::Open;
+                        Rec."IMW AA Status" := Rec."IMW AA Status"::Open;
                         AutoAssignDiscGrMgt.TurnOff();
                     end;
                 end
                 else
-                    if not Confirm(labelChangeAutoAssignedFromFalseQst) then
-                        Rec."IMW Auto Ass. Cust. Disc. Gr." := false;
+                    if not Confirm(labelChangeAutoAssignFromFalseQst) then
+                        Rec."IMW AA Cust. Disc. Gr." := false;
             end;
         }
         field(50002; "IMW Turnover Period"; DateFormula)
         {
-            Caption = 'Turnover period';
+            Caption = 'Turnover Threshold Period';
             DataClassification = CustomerContent;
             InitValue = "-90D";
 
@@ -56,17 +56,17 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
                 end;
             end;
         }
-        field(50004; "IMW Status"; Enum "IMW Status")
+        field(50004; "IMW AA Status"; Enum "IMW Status")
         {
-            Caption = 'Status';
+            Caption = 'Status Of Auto Assign';
             DataClassification = CustomerContent;
             InitValue = "open";
 
         }
     }
     var
-        labelChangeAutoAssignedFromTrueQst: Label 'Do you want to disable the functionality? All auto assign lost validity.';
-        labelChangeAutoAssignedFromFalseQst: Label 'Do you want to enable the functionality?';
+        labelChangeAutoAssignFromTrueQst: Label 'Do you want to disable the functionality? All auto assign lost validity.';
+        labelChangeAutoAssignFromFalseQst: Label 'Do you want to enable the functionality?';
 
     local procedure CheckCorectDate(value: DateFormula): Boolean
     begin

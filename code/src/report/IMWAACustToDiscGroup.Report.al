@@ -12,17 +12,17 @@ report 50001 "IMW AA Cust. To Disc. Group"
         {
             trigger OnPreDataItem()
             begin
-                if not (SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." and (SalesReceivablesSetup."IMW Status" = SalesReceivablesSetup."IMW Status"::Released)) then
+                if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then
                     exit;
                 if OnlyInvalidCust then
-                    Customer.SetFilter(Customer."IMW Auto. Ass. Disc. Valid To", '<%1', Today());
+                    Customer.SetFilter(Customer."IMW AA Disc. Valid To", '<%1', Today());
             end;
 
             trigger OnAfterGetRecord()
             var
                 AutoAssignDiscGrMgt: Codeunit "IMW Auto Assign Disc. Gr. Mgt.";
             begin
-                if not (SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." and (SalesReceivablesSetup."IMW Status" = SalesReceivablesSetup."IMW Status"::Released)) then
+                if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then
                     exit;
                 AutoAssignDiscGrMgt.AutoAssingCustomerToDiscGroup(Customer);
                 Counter := Counter + 1;
@@ -30,7 +30,7 @@ report 50001 "IMW AA Cust. To Disc. Group"
 
             trigger OnPostDataItem();
             begin
-                if not (SalesReceivablesSetup."IMW Auto Ass. Cust. Disc. Gr." and (SalesReceivablesSetup."IMW Status" = SalesReceivablesSetup."IMW Status"::Released)) then begin
+                if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then begin
                     Message(FunctionalityDisableMsg);
                     exit;
                 end;
@@ -63,7 +63,7 @@ report 50001 "IMW AA Cust. To Disc. Group"
         OnlyInvalidCust: Boolean;
         Counter: Integer;
         CountChangesMsg: Label 'Changes: %1';
-        FunctionalityDisableMsg: Label 'Auto Assign To Discount Group functionality must be enable and Status must be released.';
+        FunctionalityDisableMsg: Label 'Customers can not be auto assigned because Auto Assign To Discount Group functionality must be enable and Status must be released.';
 
     trigger OnInitReport()
     var

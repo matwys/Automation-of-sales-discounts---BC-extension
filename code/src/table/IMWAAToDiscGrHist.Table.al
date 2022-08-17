@@ -17,20 +17,20 @@ table 50002 "IMW AA To Disc. Gr. Hist."
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(11; "Cust. Disc. Group Code"; Code[20])
+        field(11; "Customer Disc. Group Code"; Code[20])
         {
             Caption = 'Customer Disc. Group Code';
             DataClassification = CustomerContent;
             Editable = false;
 
         }
-        field(12; "IMW Last Auto. Ass. Ch. By"; Code[50])
+        field(12; "IMW Last AA Ch. By"; Code[50])
         {
             Caption = 'Last Auto Assign To Disc. Group Changed By';
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(13; "IMW Last Auto Ass. Ch. Date"; Date)
+        field(13; "IMW Last AA Ch. Date"; Date)
         {
             Caption = 'Last Auto Assign To Disc. Group Changed Date';
             DataClassification = CustomerContent;

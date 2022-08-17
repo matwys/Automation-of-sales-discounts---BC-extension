@@ -27,19 +27,19 @@ page 50002 "IMW AA Disc. Gr. Hi. List"
                     ApplicationArea = All;
                     ToolTip = 'Customer No.';
                 }
-                field("Cust. Disc. Group Code"; Rec."Cust. Disc. Group Code")
+                field("Customer Disc. Group Code"; Rec."Customer Disc. Group Code")
                 {
                     Caption = 'Customer Disc. Group Code';
                     ApplicationArea = All;
                     ToolTip = 'Customer Disc. Group Code';
                 }
-                field("IMW Last Auto. Ass. Ch. By"; Rec."IMW Last Auto. Ass. Ch. By")
+                field("IMW Last AA Ch. By"; Rec."IMW Last AA Ch. By")
                 {
                     Caption = 'Last Auto Assign To Disc. Group Changed By';
                     ApplicationArea = All;
                     ToolTip = 'Last Auto Assign To Discount Group Changed By';
                 }
-                field("IMW Last Auto Ass. Ch. Date"; Rec."IMW Last Auto Ass. Ch. Date")
+                field("IMW Last AA Ch. Date"; Rec."IMW Last AA Ch. Date")
                 {
                     Caption = 'Last Auto Assign To Disc. Group Changed Date';
                     ApplicationArea = All;

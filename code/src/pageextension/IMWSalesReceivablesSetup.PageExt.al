@@ -7,7 +7,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
             group("IMW Auto Assigned Customer Discount Group")
             {
                 Caption = 'Auto Assigned Customer To Disc. Group';
-                field("IMW Auto Assign Cust.Disc.Gr."; Rec."IMW Auto Ass. Cust. Disc. Gr.")
+                field("IMW Auto Assign Cust.Disc.Gr."; Rec."IMW AA Cust. Disc. Gr.")
                 {
                     Caption = 'Enable Functionality';
                     ApplicationArea = All;
@@ -25,7 +25,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     ApplicationArea = All;
                     ToolTip = 'Specifies Validity Period Of Auto Assign.';
                 }
-                field("IMW Status"; Rec."IMW Status")
+                field("IMW Status"; Rec."IMW AA Status")
                 {
                     Caption = 'Status Of Auto Assign To Disc. Group Setup';
                     ApplicationArea = All;
