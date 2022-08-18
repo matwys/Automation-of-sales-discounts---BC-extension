@@ -204,7 +204,6 @@ codeunit 50100 "IMW AA Cust. Disc. Gr. Tests"
         CustomerDiscountGroup: Record "Customer Discount Group";
         IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-        IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
         IMWAAToDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
         CustomerCardTestPage: TestPage "Customer Card";
 
@@ -260,11 +259,8 @@ codeunit 50100 "IMW AA Cust. Disc. Gr. Tests"
         CustomerDiscountGroup: Record "Customer Discount Group";
         IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-        IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
         IMWAAToDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
         IMWAACustDiscGrSetupTestPage: TestPage "IMW AA Cust. Disc. Gr. Setup";
-        IMWAACustToDiscGroup: Report "IMW AA Cust. To Disc. Group";
-
     begin
         // [Scenerio]
         Initialize();
@@ -321,7 +317,7 @@ codeunit 50100 "IMW AA Cust. Disc. Gr. Tests"
     end;
 
     [Test]
-    procedure ErrorCustomerAddedToSalesDocument()
+    procedure ErrorCustomerWithoutGroupAddedToSalesDocument()
     var
         Customer: Record Customer;
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
@@ -341,16 +337,99 @@ codeunit 50100 "IMW AA Cust. Disc. Gr. Tests"
 
         SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Released;
         SalesReceivablesSetup.Modify();
-
-        // [WHEN] Customer is added to Sales Order.
         SalesHeader.Init();
         SalesHeader."No." := '100000';
+        // [WHEN] Customer is added to Sales Order.
         asserterror SetCustomerNoOnSalesHeader(SalesHeader, Customer."No.");
 
         // [THEN] Error. Customer can't be added.
         Assert.ExpectedError('Customer has invalid assign to Disc. Group. Run action Auto Assign to Disc. Group for this Customer.');
 
         Customer.DeleteAll();
+    end;
+
+    [Test]
+    procedure ErrorCustomerInvalidAssignAddedToSalesDocument()
+    var
+        CustomerDiscountGroup: Record "Customer Discount Group";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        Customer: Record Customer;
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        SalesHeader: Record "Sales Header";
+    begin
+        // [Scenerio]
+        Initialize();
+
+        // [GIVEN] Customer has discount group but date is invalid. Value of Auto Assigned Cust. Disc. Group is true.
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Open;
+        SalesReceivablesSetup."IMW AA Cust. Disc. Gr." := true;
+        SalesReceivablesSetup.Modify();
+
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'GR0';
+        CustomerDiscountGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'GR0';
+        IMWAACustDiscGrSetup."Treshold Amount" := 0;
+        IMWAACustDiscGrSetup.Insert();
+
+        CreateCustomer(Customer);
+        Customer."Customer Disc. Group" := 'GR0';
+        Customer."IMW AA Disc. Valid To" := CalcDate('<-10D>', Today());
+        Customer.Modify();
+
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Released;
+        SalesReceivablesSetup.Modify();
+
+        SalesHeader.Init();
+        SalesHeader."No." := '100000';
+
+        // [WHEN] Customer is added to Sales Order.
+        asserterror SetCustomerNoOnSalesHeader(SalesHeader, Customer."No.");
+
+        // [THEN] Error. Customer can't be added.
+        Assert.ExpectedError('Customer has invalid assign to Disc. Group. Run action Auto Assign to Disc. Group for this Customer.');
+        Customer.DeleteAll();
+        IMWAACustDiscGrSetup.DeleteAll();
+        CustomerDiscountGroup.DeleteAll();
+    end;
+
+    [Test]
+    procedure CustomerIsAllocatedDiscGroupAfterInit()
+    var
+        Customer: Record Customer;
+        CustomerDiscountGroup: Record "Customer Discount Group";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        // [Scenerio]
+        Initialize();
+
+        // [GIVEN] Value of Auto Assigned Cust. Disc. Group is true. Status is "Released".
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Released;
+        SalesReceivablesSetup."IMW AA Cust. Disc. Gr." := true;
+        SalesReceivablesSetup.Modify();
+
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'GR0';
+        CustomerDiscountGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'GR0';
+        IMWAACustDiscGrSetup."Treshold Amount" := 0;
+        IMWAACustDiscGrSetup.Insert();
+
+
+        // [WHEN] New Customer is created.
+        CreateCustomer(Customer);
+        // [THEN] Customer is allocated to discount group.
+        Assert.AreEqual(Customer."Customer Disc. Group", 'GR0', 'Customer was not assigned to disc group.');
+        Customer.DeleteAll();
+        IMWAACustDiscGrSetup.DeleteAll();
+        CustomerDiscountGroup.DeleteAll();
     end;
 
     local procedure SetCustomerNoOnSalesHeader(var SalesHeader: Record "Sales Header"; "Customer No.": Code[20])
