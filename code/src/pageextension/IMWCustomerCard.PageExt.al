@@ -10,7 +10,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         {
             field("IMW AA Disc. Valid To"; Rec."IMW AA Disc. Valid To")
             {
-                Caption = 'Auto Assign Disc. To Disc. Valid To';
+                Caption = 'Auto Assign To Disc. Valid To';
                 ApplicationArea = All;
                 ToolTip = 'Ending Date Of Valid Auto Assign To Disc. Group';
                 Editable = false;
