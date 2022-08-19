@@ -1,7 +1,7 @@
 page 50001 "IMW AA Cust. Disc. Gr. Setup"
 {
     ApplicationArea = All;
-    Caption = 'Auto Assign Customer To Disc. Group Setup';
+    Caption = 'Auto Assign Customer Disc. Group Setup';
     PageType = List;
     SourceTable = "IMW AA Cust. Disc. Gr. Setup";
     UsageCategory = Lists;
