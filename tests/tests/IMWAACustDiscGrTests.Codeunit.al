@@ -432,10 +432,92 @@ codeunit 50100 "IMW AA Cust. Disc. Gr. Tests"
         CustomerDiscountGroup.DeleteAll();
     end;
 
+    [Test]
+    procedure CustomerIsNotAllocaredDiscGroupAfterInit()
+    var
+        Customer: Record Customer;
+        CustomerDiscountGroup: Record "Customer Discount Group";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        // [Scenerio]
+        Initialize();
+        // [GIVEN] Value of Auto Assigned Cust. Disc. Group is true. Status is "Open".
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Open;
+        SalesReceivablesSetup."IMW AA Cust. Disc. Gr." := true;
+        SalesReceivablesSetup.Modify();
+
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'GR0';
+        CustomerDiscountGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'GR0';
+        IMWAACustDiscGrSetup."Treshold Amount" := 0;
+        IMWAACustDiscGrSetup.Insert();
+        // [WHEN] New Customer is created.
+        CreateCustomer(Customer);
+        // [THEN] Customer is not allocated to discount group.
+        Assert.AreEqual(Customer."Customer Disc. Group", '', 'Customer was assigned to disc group.');
+        Customer.DeleteAll();
+        IMWAACustDiscGrSetup.DeleteAll();
+        CustomerDiscountGroup.DeleteAll();
+    end;
+
+    [Test]
+    procedure ErrorTheSameValueForThresholdAmountInSetup()
+    var
+        CustomerDiscountGroup: Record "Customer Discount Group";
+        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        // [Scenerio]
+        Initialize();
+        // [GIVEN] One discount group has not requirement. 
+        If not SalesReceivablesSetup.Get() then
+            SalesReceivablesSetup.Init();
+        SalesReceivablesSetup."IMW AA Status" := SalesReceivablesSetup."IMW AA Status"::Open;
+        SalesReceivablesSetup."IMW AA Cust. Disc. Gr." := true;
+        SalesReceivablesSetup.Modify();
+
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'GR0';
+        CustomerDiscountGroup.Insert();
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'GR1';
+        CustomerDiscountGroup.Insert();
+        CustomerDiscountGroup.Init();
+        CustomerDiscountGroup.Code := 'GR2';
+        CustomerDiscountGroup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'GR0';
+        IMWAACustDiscGrSetup."Treshold Amount" := 0;
+        IMWAACustDiscGrSetup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Code := 'GR1';
+        IMWAACustDiscGrSetup."Treshold Amount" := 1000;
+        IMWAACustDiscGrSetup.Insert();
+        IMWAACustDiscGrSetup.Init();
+        IMWAACustDiscGrSetup.Validate("Code", 'GR2');
+        IMWAACustDiscGrSetup."Treshold Amount" := 10;
+        IMWAACustDiscGrSetup.Insert();
+        // [WHEN] In Requirements Auto Ass. Disc. Group page new record is created. Code is salected. Threshold has the same value like other.
+        asserterror SetThresholdAmount(IMWAACustDiscGrSetup, 1000);
+        // [THEN] Error. Other Threshold has the same value.
+        Assert.ExpectedError('Invalide value. Other Threshold has the same value.');
+    end;
+
     local procedure SetCustomerNoOnSalesHeader(var SalesHeader: Record "Sales Header"; "Customer No.": Code[20])
     begin
         SalesHeader.Validate("Sell-to Customer No.", "Customer No.");
         SalesHeader.Modify();
+    end;
+
+    local procedure SetThresholdAmount(var IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup"; "Threshold Amount": Decimal)
+    begin
+        IMWAACustDiscGrSetup.Validate("Treshold Amount", "Threshold Amount");
+        IMWAACustDiscGrSetup.Modify();
     end;
 
     local procedure CreateCustomer(var Customer: Record Customer)
