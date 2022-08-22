@@ -1,6 +1,6 @@
 report 50001 "IMW AA Cust. To Disc. Group"
 {
-    Caption = 'Auto Assign All Customers To Discount Groups';
+    Caption = 'Auto Assign All Customers Discount Groups';
     ProcessingOnly = true;
     ApplicationArea = All;
     UsageCategory = ReportsAndAnalysis;
