@@ -1,4 +1,4 @@
-# Auto Assign Customer To Discount Group (Admin)
+# Auto Assign Customer Discount Group (Admin)
 
 ## Turning on functionality
 

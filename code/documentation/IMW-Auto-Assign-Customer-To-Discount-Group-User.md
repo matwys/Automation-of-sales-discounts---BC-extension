@@ -1,4 +1,4 @@
-# Auto Assign Customer To Discount Group (User)
+# Auto Assign Customer Discount Group (User)
 
 ## Auto assign Customer to discount group
 1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Customers**. Choose the related link.
