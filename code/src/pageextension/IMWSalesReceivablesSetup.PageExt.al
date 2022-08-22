@@ -27,7 +27,7 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                 }
                 field("IMW Status"; Rec."IMW AA Status")
                 {
-                    Caption = 'Status Of Auto Assign To Disc. Group Setup';
+                    Caption = 'Status Of Auto Assign Disc. Group Setup';
                     ApplicationArea = All;
                     ToolTip = 'Status of Auto Assign Disc. Group Setup Page.';
                     Editable = false;

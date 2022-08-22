@@ -1,7 +1,7 @@
 page 50002 "IMW AA Disc. Gr. Hi. List"
 {
     ApplicationArea = All;
-    Caption = 'Auto Assign Customer To Disc. Group History';
+    Caption = 'Auto Assign Customer Disc. Group History';
     PageType = List;
     SourceTable = "IMW AA To Disc. Gr. Hist.";
     UsageCategory = Lists;
@@ -35,13 +35,13 @@ page 50002 "IMW AA Disc. Gr. Hi. List"
                 }
                 field("IMW Last AA Ch. By"; Rec."IMW Last AA Ch. By")
                 {
-                    Caption = 'Last Auto Assign To Disc. Group Changed By';
+                    Caption = 'Last Auto Assign Disc. Group Changed By';
                     ApplicationArea = All;
                     ToolTip = 'Last Auto Assign To Discount Group Changed By';
                 }
                 field("IMW Last AA Ch. Date"; Rec."IMW Last AA Ch. Date")
                 {
-                    Caption = 'Last Auto Assign To Disc. Group Changed Date';
+                    Caption = 'Last Auto Assign Disc. Group Changed Date';
                     ApplicationArea = All;
                     ToolTip = 'Last Date Of Auto Assigned To Discount Group Changed';
                 }

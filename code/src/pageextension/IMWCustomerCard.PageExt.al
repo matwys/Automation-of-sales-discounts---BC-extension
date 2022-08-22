@@ -10,15 +10,15 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         {
             field("IMW AA Disc. Valid To"; Rec."IMW AA Disc. Valid To")
             {
-                Caption = 'Auto Assign To Disc. Valid To';
+                Caption = 'Auto Assign Disc. Valid To';
                 ApplicationArea = All;
-                ToolTip = 'Ending Date Of Valid Auto Assign To Disc. Group';
+                ToolTip = 'Ending Date Of Valid Auto Assign Disc. Group';
                 Editable = false;
                 Visible = AACustDiscGroupEnable;
             }
             field("IMW Last AA Ch. By"; Rec."IMW Last AA Ch. By")
             {
-                Caption = 'Last Auto Assign To Disc. Group Changed By';
+                Caption = 'Last Auto Assign Disc. Group Changed By';
                 ApplicationArea = All;
                 ToolTip = 'Last Auto Assign To Disc. Group Changed By';
                 Editable = false;
@@ -26,7 +26,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
             }
             field("IMW Last AA Ch. Date"; Rec."IMW Last AA Ch. Date")
             {
-                Caption = 'Last Auto Assign To Disc. Group Changed Date';
+                Caption = 'Last Auto Assign Disc. Group Changed Date';
                 ApplicationArea = All;
                 ToolTip = 'Last Auto Assign To Disc. Group Changed Date';
                 Editable = false;
@@ -62,7 +62,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         {
             action("History AA To Disc. Gr.")
             {
-                Caption = 'History Of Auto Assign To Disc. Group';
+                Caption = 'History Of Auto Assign Disc. Group';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
                 Visible = AACustDiscGroupEnable;
