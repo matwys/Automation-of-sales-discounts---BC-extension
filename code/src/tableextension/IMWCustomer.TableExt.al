@@ -2,19 +2,19 @@ tableextension 50002 "IMW Customer" extends Customer
 {
     fields
     {
-        field(50001; "IMW AA Disc. Valid To"; Date)
+        field(50001; "IMW CDGA Valid To"; Date)
         {
-            Caption = 'Auto Assign Disc. To Disc. Valid To';
+            Caption = 'CDGA Valid To';
             DataClassification = CustomerContent;
         }
-        field(50002; "IMW Last AA Ch. By"; Code[50])
+        field(50002; "IMW CDGA Changed By"; Code[50])
         {
-            Caption = 'Last Auto Assign To Disc. Group Changed By';
+            Caption = 'CDGA Changed By';
             DataClassification = ToBeClassified;
         }
-        field(50003; "IMW Last AA Ch. Date"; Date)
+        field(50003; "IMW CDGA Changed Date"; Date)
         {
-            Caption = 'Last Auto Assign To Disc. Group Changed Date';
+            Caption = 'CDGA Changed Date';
             DataClassification = ToBeClassified;
         }
     }

@@ -1,4 +1,4 @@
-codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
+codeunit 50001 "IMW CDGA Mgt."
 {
     procedure Release()
     var
@@ -12,7 +12,7 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
         end;
         if IsHandled then begin
             SalesReceivablesSetup.Get();
-            SalesReceivablesSetup.Validate("IMW AA Status", SalesReceivablesSetup."IMW AA Status"::Released);
+            SalesReceivablesSetup.Validate("IMW CDGA Treshold Setup Status", SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released);
             SalesReceivablesSetup.Modify();
             Message(ChangeForReleasedMsg);
         end;
@@ -20,10 +20,10 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
 
     local procedure CheckZero(): Boolean
     var
-        AADiscGroupSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
     begin
-        AADiscGroupSetup.SetRange("Treshold Amount", 0);
-        if AADiscGroupSetup.Count <> 1 then
+        IMWCDGAThresholdsSetup.SetRange("Threshold Sales Amount", 0);
+        if IMWCDGAThresholdsSetup.Count <> 1 then
             exit(false);
         exit(true);
     end;
@@ -33,7 +33,7 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
         SalesReceivablesSetup.Get();
-        SalesReceivablesSetup.Validate("IMW AA Status", SalesReceivablesSetup."IMW AA Status"::Open);
+        SalesReceivablesSetup.Validate("IMW CDGA Treshold Setup Status", SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Open);
         SalesReceivablesSetup.Modify();
         Message(ChangeForOpenMsg);
     end;
@@ -44,9 +44,9 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
     begin
         if Customer.FindSet() then
             repeat
-                Customer."IMW AA Disc. Valid To" := 0D;
-                Customer."IMW Last AA Ch. Date" := 0D;
-                Customer."IMW Last AA Ch. By" := '';
+                Customer."IMW CDGA Valid To" := 0D;
+                Customer."IMW CDGA Changed Date" := 0D;
+                Customer."IMW CDGA Changed By" := '';
                 Customer.Modify();
             until Customer.Next() = 0;
     end;
@@ -54,14 +54,14 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
     procedure AutoAssignCustomerToDiscGroup(Customer: Record Customer)
     var
         CustLedgerEntry: Record "Cust. Ledger Entry";
-        IMWAAToDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
+        IMWCDGAChangeLog: Record "IMW CDGA Change Log";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         "Disc. Group. No.": Code[20];
         SalesBalanc: Decimal;
     begin
         SalesReceivablesSetup.Get();
         CustLedgerEntry.SetRange(CustLedgerEntry."Customer No.", Customer."No.");
-        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW Turnover Period", Today()));
+        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW CDGA Sales Period", Today()));
 
         if CustLedgerEntry.FindSet() then
             repeat
@@ -69,59 +69,59 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
             until CustLedgerEntry.Next() = 0;
         "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
 
-        IMWAAToDiscGrHist.Init();
-        IMWAAToDiscGrHist."Customer No." := Customer."No.";
-        IMWAAToDiscGrHist."Customer Disc. Group Code" := "Disc. Group. No.";
-        IMWAAToDiscGrHist."IMW Last AA Ch. By" := UserId;
-        IMWAAToDiscGrHist."IMW Last AA Ch. Date" := Today();
-        IMWAAToDiscGrHist.Insert();
+        IMWCDGAChangeLog.Init();
+        IMWCDGAChangeLog."Customer No." := Customer."No.";
+        IMWCDGAChangeLog."Customer Disc. Group Code" := "Disc. Group. No.";
+        IMWCDGAChangeLog."CDGA Changed By" := UserId;
+        IMWCDGAChangeLog."CDGA Changed Date" := Today();
+        IMWCDGAChangeLog.Insert();
 
         Customer.Validate("Customer Disc. Group", "Disc. Group. No.");
-        Customer.Validate("IMW Last AA Ch. Date", Today);
-        Customer.Validate("IMW AA Disc. Valid To", CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today()));
-        Customer.Validate("IMW Last AA Ch. By", UserId);
+        Customer.Validate("IMW CDGA Changed Date", Today);
+        Customer.Validate("IMW CDGA Valid To", CalcDate(SalesReceivablesSetup."IMW CDGA Validity Period", Today()));
+        Customer.Validate("IMW CDGA Changed By", UserId);
         Customer.Modify();
     end;
 
     local procedure FindGroupForCustomer(SalesBalanc: Decimal): Code[20]
     var
-        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
     begin
-        IMWAACustDiscGrSetup.SetFilter(IMWAACustDiscGrSetup."Treshold Amount", '<=%1', SalesBalanc);
-        IMWAACustDiscGrSetup.SetCurrentKey("Treshold Amount");
-        IMWAACustDiscGrSetup.FindLast();
-        exit(IMWAACustDiscGrSetup.Code);
+        IMWCDGAThresholdsSetup.SetFilter(IMWCDGAThresholdsSetup."Threshold Sales Amount", '<=%1', SalesBalanc);
+        IMWCDGAThresholdsSetup.SetCurrentKey("Threshold Sales Amount");
+        IMWCDGAThresholdsSetup.FindLast();
+        exit(IMWCDGAThresholdsSetup.Code);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterOnInsert', '', false, false)]
     local procedure OnAfterOnInsert(var Customer: Record Customer; xCustomer: Record Customer)
     var
-        IMWAAToDiscGrHist: Record "IMW AA To Disc. Gr. Hist.";
+        IMWAAToDiscGrHist: Record "IMW CDGA Change Log";
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         "Disc. Group. No.": Code[20];
     begin
         SalesReceivablesSetup.Get();
-        if not ((SalesReceivablesSetup."IMW AA Status"::Released = SalesReceivablesSetup."IMW AA Status") and SalesReceivablesSetup."IMW AA Cust. Disc. Gr.") then
+        if not ((SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released = SalesReceivablesSetup."IMW CDGA Treshold Setup Status") and SalesReceivablesSetup."IMW CDGA Enabled") then
             exit;
 
         "Disc. Group. No." := FindGroupForCustomer(0);
         IMWAAToDiscGrHist.Init();
         IMWAAToDiscGrHist."Customer No." := Customer."No.";
         IMWAAToDiscGrHist."Customer Disc. Group Code" := "Disc. Group. No.";
-        IMWAAToDiscGrHist."IMW Last AA Ch. By" := UserId;
-        IMWAAToDiscGrHist."IMW Last AA Ch. Date" := Today();
+        IMWAAToDiscGrHist."CDGA Changed By" := UserId;
+        IMWAAToDiscGrHist."CDGA Changed Date" := Today();
         IMWAAToDiscGrHist.Insert();
 
         Customer."Customer Disc. Group" := "Disc. Group. No.";
-        Customer."IMW Last AA Ch. Date" := Today;
-        Customer."IMW AA Disc. Valid To" := CalcDate(SalesReceivablesSetup."IMW Period Of Validity", Today());
-        Customer."IMW Last AA Ch. By" := UserId;
+        Customer."IMW CDGA Changed Date" := Today;
+        Customer."IMW CDGA Valid To" := CalcDate(SalesReceivablesSetup."IMW CDGA Validity Period", Today());
+        Customer."IMW CDGA Changed By" := UserId;
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Customer Discount Group", 'OnBeforeDeleteEvent', '', false, false)]
     local procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
     var
-        IMWAACustDiscGrSetup: Record "IMW AA Cust. Disc. Gr. Setup";
+        IMWAACustDiscGrSetup: Record "IMW CDGA Thresholds Setup";
     begin
         IMWAACustDiscGrSetup.SetRange(IMWAACustDiscGrSetup.Code, Rec.Code);
         if IMWAACustDiscGrSetup.Count > 0 then
@@ -136,8 +136,8 @@ codeunit 50001 "IMW AA Cust. Disc. Gr. Mgt."
     begin
         SalesReceivablesSetup.Get();
         Customer.get(Rec."Sell-to Customer No.");
-        if SalesReceivablesSetup."IMW AA Cust. Disc. Gr." then
-            if Customer."IMW AA Disc. Valid To" < Today() then
+        if SalesReceivablesSetup."IMW CDGA Enabled" then
+            if Customer."IMW CDGA Valid To" < Today() then
                 Error(NewDocumentErr);
     end;
 

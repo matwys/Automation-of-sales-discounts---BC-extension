@@ -4,54 +4,53 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     {
         modify("Customer Disc. Group")
         {
-            Editable = NOT AACustDiscGroupEnable;
+            Editable = NOT CDGAEnabled;
         }
         addafter("Customer Disc. Group")
         {
-            field("IMW AA Disc. Valid To"; Rec."IMW AA Disc. Valid To")
+            field("IMW CDGA Valid To"; Rec."IMW CDGA Valid To")
             {
-                Caption = 'Auto Assign Disc. Valid To';
+                Caption = 'CDGA Valid To';
                 ApplicationArea = All;
-                ToolTip = 'Ending Date Of Valid Auto Assign Disc. Group';
+                ToolTip = 'CDGA Valid To';
                 Editable = false;
-                Visible = AACustDiscGroupEnable;
+                Visible = CDGAEnabled;
             }
-            field("IMW Last AA Ch. By"; Rec."IMW Last AA Ch. By")
+            field("IMW CDGA Changed By"; Rec."IMW CDGA Changed By")
             {
-                Caption = 'Last Auto Assign Disc. Group Changed By';
+                Caption = 'CDGA Changed By';
                 ApplicationArea = All;
-                ToolTip = 'Last Auto Assign To Disc. Group Changed By';
+                ToolTip = 'Last CDGA Changed By';
                 Editable = false;
-                Visible = AACustDiscGroupEnable;
+                Visible = CDGAEnabled;
             }
-            field("IMW Last AA Ch. Date"; Rec."IMW Last AA Ch. Date")
+            field("IMW CDGA Changed Date"; Rec."IMW CDGA Changed Date")
             {
-                Caption = 'Last Auto Assign Disc. Group Changed Date';
+                Caption = 'CDGA Changed Date';
                 ApplicationArea = All;
-                ToolTip = 'Last Auto Assign To Disc. Group Changed Date';
+                ToolTip = 'Last CDGA Changed Date';
                 Editable = false;
-                Visible = AACustDiscGroupEnable;
+                Visible = CDGAEnabled;
             }
         }
     }
 
     actions
     {
-        //addafter("Prices and Discounts Overview")
         addlast("Prices and Discounts")
         {
-            action("IMW AA To Disc. Gr.")
+            action("IMW CDGA Update Customer")
             {
-                Caption = 'Auto Assign To Disc. Group';
+                Caption = 'CDGA Update Customer';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
-                Enabled = not SetupStatus;
-                Visible = AACustDiscGroupEnable;
-                ToolTip = 'Auto Assign Customer to Discount Group by Balance.';
+                Enabled = not CDGAThresholdSetupStatus;
+                Visible = CDGAEnabled;
+                ToolTip = 'CDGA Update Customer.';
 
                 trigger OnAction()
                 var
-                    IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
+                    IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
                 begin
                     IMWAACustDiscGrMgt.AutoAssignCustomerToDiscGroup(Rec);
 
@@ -60,32 +59,31 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
         }
         addlast(History)
         {
-            action("History AA To Disc. Gr.")
+            action("IMW CDGA Change Log")
             {
-                Caption = 'History Of Auto Assign Disc. Group';
+                Caption = 'CDGA Change Log';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
-                Visible = AACustDiscGroupEnable;
-                ToolTip = 'View History About Auto Assign To Discount Group.';
-                RunObject = Page "IMW AA Disc. Gr. Hi. List";
+                Visible = CDGAEnabled;
+                ToolTip = 'View Log About CDGA';
+                RunObject = Page "IMW CDGA Change Log";
                 RunPageLink = "Customer No." = FIELD("No.");
             }
         }
     }
 
     var
-        AACustDiscGroupEnable: Boolean;
-        SetupStatus: Boolean;
+        CDGAEnabled: Boolean;
+        CDGAThresholdSetupStatus: Boolean;
 
     trigger OnOpenPage()
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-
     begin
         SalesReceivablesSetup.Get();
-        SetupStatus := false;
-        if SalesReceivablesSetup."IMW AA Status" <> SalesReceivablesSetup."IMW AA Status"::Released then
-            SetupStatus := true;
-        AACustDiscGroupEnable := SalesReceivablesSetup."IMW AA Cust. Disc. Gr.";
+        CDGAThresholdSetupStatus := false;
+        if SalesReceivablesSetup."IMW CDGA Treshold Setup Status" <> SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released then
+            CDGAThresholdSetupStatus := true;
+        CDGAEnabled := SalesReceivablesSetup."IMW CDGA Enabled";
     end;
 }

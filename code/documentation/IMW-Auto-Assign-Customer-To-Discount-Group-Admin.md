@@ -1,43 +1,45 @@
-# Auto Assign Customer Discount Group (Admin)
+# Customer Disc. Group Automation (Admin)
 
 ## Turning on functionality
 
 1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Sales & Receivables Setup**. Choose the related link.
-2. In **"Auto Assign Customer To Disc. Group"** Group find field **Enable Functionality** and turn it on.
+2. In **"CDG Automation"** Group find field **CDGA Enabled** and turn it on.
 
 > [!Note]
 >
-> Value of **Validity Period Of Auto Assign** must be greater or equal **1D**.
+> Value of **CDGA Validity Period** must be greater or equal **1D**.
 >
-> Value of **Turnover Threshold Period** bust be less or equal **-1D**.
+> Value of **CDGA Sales Period** bust be less or equal **-1D**.
 
-## Set the requirement for auto assign to discount group.
+## Set the requirement for Customer Disc. Group Automation
 
-1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Auto Assign Customer To Disc. Group Setup**. Choose the related link.
+1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **CDGA Thresholds Setup**. Choose the related link.
 2. Select the setup for Customer Disc. Group or create a new one.
-3. **Customer Disc. Group CodeAscending** field represents **Customer Disc. Groups**.
-4. **Threshold Amount** field is used for set threshold that must be met for assign to that group. All threshold amount must have different value.
+3. **Customer Disc. Group Code** field represents **Customer Disc. Groups**.
+4. **Threshold Sales Amount (LCY)** field is used for set threshold that must be met for assign to that group. All threshold amount must have different value.
 5. After changes find action **Release** (Actions -> Release -> Release) and use it.
 
 > [!Note]
 >
-> User can make changes when **Status Of Auto Assign To Disc. Group Setup** in "Auto Assign Customer Discount Group" in **Sales & Receivables Setup** is *Open*. When **Status Of Auto Assign To Disc. Group Setup** is *Released* use action **Open** (Actions -> Release -> Open) in **Auto Assign Customer To Disc. Group Setup**. 
+> User can make changes when **CDGA Threshold Setup Status** in "CDG Automation" in **Sales & Receivables Setup** is *Open*. When **CDGA Threshold Setup Status** is *Released* use action **Open** (Actions -> Release -> Open) in **CDGA Thresholds Setup**.
 
 ## Auto assign Customer to discount group
+
 1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Customers**. Choose the related link.
 2. Choose **Customer** from the list and open **Customer Card**.
 3. When functionality is enable it should not be possible to manually manipulate with **Customer Disc. Group**.
-4. You can use action to auto assign this Customer to discount group. Find action **Auto Assign To Disc. Group** (Related -> Prices and Discounts ->Auto Assign To Disc. Group) and run it.
-5. See Customer is assigned to discount group and fields **Customer Disc. Group**, **Auto Assign Disc. To Disc. Valid To**, **Last Auto Assign To Disc. Group Changed By** and **Last Auto Assign To Disc. Group Changed Date** have been changed.
+4. You can use action to auto assign this Customer to discount group. Find action **CDGA Update Customer** (Related -> Prices and Discounts ->CDGA Update Customer) and run it.
+5. See Customer is assigned to discount group and fields **Customer Disc. Group**, **CDGA Valid To**, **CDGA Changed By** and **CDGA Changed Date** have been changed.
 
 > [!Note]
 >
 > New created Customer will be auto assigned to **Customer Disc. Group**.
 
 ## Auto assign all Customers to discount group
-1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Requirements Auto Ass. Disc. Group**. Choose the related link.
-2. Find action **Auto Assign All Cust. To Disc. Group Report** and rut it.
-3. Request page **Auto Assign All Customers To Discount Groups** show up. In this page is only one field **Auto Assign To Disc. Group Only With Invalid Assigned**. If it is *turned on* Customers with invalid assigned will be assigned.
+
+1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **CDGA Thresholds Setup**. Choose the related link.
+2. Find action **CDGA Update All Customers** and rut it.
+3. Request page **CDGA Update All Customers** show up. In this page is only one field **CDGA Only With Invalid Assigned**. If it is *turned on* Customers with invalid assigned will be assigned.
 If it is *turned off* all Customers will be assigned.
 
 > [!Note]
@@ -45,6 +47,7 @@ If it is *turned off* all Customers will be assigned.
 > This action is available when **functionality** is *turned on* and **status** is *released*.
 
 ## Create new Sales Document
+
 1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Sales Order**. Choose the related link.
 2. Set Customer in **Customer Name** field. When Customer has invalid assigned this page show error. When Customer has valid assigned, all should work correctly.
 
@@ -54,12 +57,16 @@ If it is *turned off* all Customers will be assigned.
 >
 > All old document with customer with invalid assigned will work correctly.
 
-## History of auto assign to discount group
-### Search history page in tell me what you want to do
-1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Auto Assign Customer To Disc. Group History**. Choose the related link.
-2. Auto Assign Customer To Disc. Group History page show up.
-### From Customer Card page.
+## CDGA Change Log
+
+### Search CDGA Change Log in tell me what you want to do
+
+1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **CDGA Change Log**. Choose the related link.
+2. CDGA Change Log page show up.
+
+### From Customer Card page
+
 1. Choose the ![Tell me what you want to do](media/TellMe.png) icon. Enter **Customers**. Choose the related link.
 2. Choose **Customer** from the list and open **Customer Card**.
-3. Find action **History Of Auto Assign To Disc. Group** (Related -> History -> History Of Auto Assign To Disc. Group) and run it.
-4. Auto Assign Customer To Disc. Group History page show up. List is filtered by *Customer No.*.
+3. Find action **CDGA Change Log** (Related -> History -> CDGA Change Log) and run it.
+4. CDGA Change Log page show up. List is filtered by *Customer No.*.

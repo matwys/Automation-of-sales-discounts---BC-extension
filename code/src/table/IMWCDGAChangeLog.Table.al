@@ -1,4 +1,4 @@
-table 50002 "IMW AA To Disc. Gr. Hist."
+table 50002 "IMW CDGA Change Log"
 {
     DataClassification = ToBeClassified;
     Caption = 'Auto Assing To Customer Disc. Group History';
@@ -24,15 +24,15 @@ table 50002 "IMW AA To Disc. Gr. Hist."
             Editable = false;
 
         }
-        field(12; "IMW Last AA Ch. By"; Code[50])
+        field(12; "CDGA Changed By"; Code[50])
         {
-            Caption = 'Last Auto Assign To Disc. Group Changed By';
+            Caption = 'CDGA Changed By';
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(13; "IMW Last AA Ch. Date"; Date)
+        field(13; "CDGA Changed Date"; Date)
         {
-            Caption = 'Last Auto Assign To Disc. Group Changed Date';
+            Caption = 'CDGA Changed Date';
             DataClassification = CustomerContent;
             Editable = false;
 

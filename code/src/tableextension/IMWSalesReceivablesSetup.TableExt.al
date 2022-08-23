@@ -2,31 +2,31 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
 {
     fields
     {
-        field(50001; "IMW AA Cust. Disc. Gr."; Boolean)
+        field(50001; "IMW CDGA Enabled"; Boolean)
         {
-            Caption = 'Auto Assigned Customer Discount Group';
+            Caption = 'CDGA Enabled';
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             var
-                IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
+                IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
             begin
-                if not Rec."IMW AA Cust. Disc. Gr." then begin
-                    if not Confirm(labelChangeAutoAssignFromTrueQst) then
-                        Rec."IMW AA Cust. Disc. Gr." := true
+                if not Rec."IMW CDGA Enabled" then begin
+                    if not Confirm(ChangeEnabledFromTrueQst) then
+                        Rec."IMW CDGA Enabled" := true
                     else begin
-                        Rec."IMW AA Status" := Rec."IMW AA Status"::Open;
+                        Rec."IMW CDGA Treshold Setup Status" := Rec."IMW CDGA Treshold Setup Status"::Open;
                         IMWAACustDiscGrMgt.TurnOff();
                     end;
                 end
                 else
-                    if not Confirm(labelChangeAutoAssignFromFalseQst) then
-                        Rec."IMW AA Cust. Disc. Gr." := false;
+                    if not Confirm(ChangeEnabledFromFalseQst) then
+                        Rec."IMW CDGA Enabled" := false;
             end;
         }
-        field(50002; "IMW Turnover Period"; DateFormula)
+        field(50002; "IMW CDGA Sales Period"; DateFormula)
         {
-            Caption = 'Turnover Threshold Period';
+            Caption = 'CDGA Sales Period';
             DataClassification = CustomerContent;
             InitValue = "-90D";
 
@@ -34,15 +34,15 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             var
                 OneDayDateFormula: DateFormula;
             begin
-                if not CheckCorectDateMinus(Rec."IMW Turnover Period") then begin
+                if not CheckCorectDateMinus(Rec."IMW CDGA Sales Period") then begin
                     Evaluate(OneDayDateFormula, '-1D');
-                    Rec."IMW Turnover Period" := OneDayDateFormula;
+                    Rec."IMW CDGA Sales Period" := OneDayDateFormula;
                 end;
             end;
         }
-        field(50003; "IMW Period Of Validity"; DateFormula)
+        field(50003; "IMW CDGA Validity Period"; DateFormula)
         {
-            Caption = 'Period Of Validity';
+            Caption = 'CDGA Validity Period';
             DataClassification = CustomerContent;
             InitValue = "30D";
 
@@ -50,23 +50,23 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             var
                 OneDayDateFormula: DateFormula;
             begin
-                if not CheckCorectDate(Rec."IMW Period Of Validity") then begin
+                if not CheckCorectDate(Rec."IMW CDGA Validity Period") then begin
                     Evaluate(OneDayDateFormula, '1D');
-                    Rec."IMW Period Of Validity" := OneDayDateFormula;
+                    Rec."IMW CDGA Validity Period" := OneDayDateFormula;
                 end;
             end;
         }
-        field(50004; "IMW AA Status"; Enum "IMW Status")
+        field(50004; "IMW CDGA Treshold Setup Status"; Enum "IMW Status")
         {
-            Caption = 'Status Of Auto Assign';
+            Caption = 'CDGA Treshold Setup Status';
             DataClassification = CustomerContent;
             InitValue = "open";
 
         }
     }
     var
-        labelChangeAutoAssignFromTrueQst: Label 'Do you want to disable the functionality? All auto assign lost validity.';
-        labelChangeAutoAssignFromFalseQst: Label 'Do you want to enable the functionality?';
+        ChangeEnabledFromTrueQst: Label 'Do you want to disable the CDGA functionality? All CDGA lost validity.';
+        ChangeEnabledFromFalseQst: Label 'Do you want to enable the CDGA functionality?';
 
     local procedure CheckCorectDate(value: DateFormula): Boolean
     begin

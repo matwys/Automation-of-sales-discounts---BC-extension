@@ -4,6 +4,7 @@
 .altemplates/
 .altestrunner/
 launch.json
+settings.json
 rad.json
 *.app
 *.g.xlf

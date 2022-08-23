@@ -1,6 +1,6 @@
-report 50001 "IMW AA Cust. To Disc. Group"
+report 50001 "IMW CDGA Update All Cust."
 {
-    Caption = 'Auto Assign All Customers Discount Groups';
+    Caption = 'CDGA Update All Customers';
     ProcessingOnly = true;
     ApplicationArea = All;
     UsageCategory = ReportsAndAnalysis;
@@ -12,17 +12,17 @@ report 50001 "IMW AA Cust. To Disc. Group"
         {
             trigger OnPreDataItem()
             begin
-                if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then
+                if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then
                     exit;
                 if OnlyInvalidCust then
-                    Customer.SetFilter(Customer."IMW AA Disc. Valid To", '<%1', Today());
+                    Customer.SetFilter(Customer."IMW CDGA Valid To", '<%1', Today());
             end;
 
             trigger OnAfterGetRecord()
             var
-                IMWAACustDiscGrMgt: Codeunit "IMW AA Cust. Disc. Gr. Mgt.";
+                IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
             begin
-                if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then
+                if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then
                     exit;
                 IMWAACustDiscGrMgt.AutoAssignCustomerToDiscGroup(Customer);
                 Counter := Counter + 1;
@@ -30,7 +30,7 @@ report 50001 "IMW AA Cust. To Disc. Group"
 
             trigger OnPostDataItem();
             begin
-                if not (SalesReceivablesSetup."IMW AA Cust. Disc. Gr." and (SalesReceivablesSetup."IMW AA Status" = SalesReceivablesSetup."IMW AA Status"::Released)) then begin
+                if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then begin
                     Message(FunctionalityDisableMsg);
                     exit;
                 end;
@@ -47,11 +47,11 @@ report 50001 "IMW AA Cust. To Disc. Group"
             {
                 group(Setup)
                 {
-                    Caption = 'Auto Assign Setup';
+                    Caption = 'CDGA Setup';
                     field(OnlyInvalidCust; OnlyInvalidCust)
                     {
                         ApplicationArea = All;
-                        Caption = 'Auto Assign To Disc. Group Only With Invalid Assigned';
+                        Caption = 'CDGA Only With Invalid Assigned';
                         ToolTip = 'Customers With Only Invalid Assign Will Be Assigned.';
                     }
                 }
@@ -62,7 +62,7 @@ report 50001 "IMW AA Cust. To Disc. Group"
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         OnlyInvalidCust: Boolean;
         Counter: Integer;
-        CountChangesMsg: Label 'Changes: %1';
+        CountChangesMsg: Label 'Changes: %1', Comment = '%1 Count changes.';
         FunctionalityDisableMsg: Label 'Customers can not be auto assigned because Auto Assign To Discount Group functionality must be enable and Status must be released.';
 
     trigger OnInitReport()

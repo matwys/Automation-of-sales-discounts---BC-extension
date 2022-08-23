@@ -1,9 +1,9 @@
-page 50002 "IMW AA Disc. Gr. Hi. List"
+page 50002 "IMW CDGA Change Log"
 {
     ApplicationArea = All;
-    Caption = 'Auto Assign Customer Disc. Group History';
+    Caption = 'CDGA Change Log';
     PageType = List;
-    SourceTable = "IMW AA To Disc. Gr. Hist.";
+    SourceTable = "IMW CDGA Change Log";
     UsageCategory = Lists;
     ModifyAllowed = false;
     InsertAllowed = false;
@@ -33,17 +33,17 @@ page 50002 "IMW AA Disc. Gr. Hi. List"
                     ApplicationArea = All;
                     ToolTip = 'Customer Disc. Group Code';
                 }
-                field("IMW Last AA Ch. By"; Rec."IMW Last AA Ch. By")
+                field("CDGA Changed By"; Rec."CDGA Changed By")
                 {
-                    Caption = 'Last Auto Assign Disc. Group Changed By';
+                    Caption = 'CDGA Changed By';
                     ApplicationArea = All;
-                    ToolTip = 'Last Auto Assign To Discount Group Changed By';
+                    ToolTip = 'CDGA Changed By';
                 }
-                field("IMW Last AA Ch. Date"; Rec."IMW Last AA Ch. Date")
+                field("CDGA Changed Date"; Rec."CDGA Changed Date")
                 {
-                    Caption = 'Last Auto Assign Disc. Group Changed Date';
+                    Caption = 'CDGA Changed Date';
                     ApplicationArea = All;
-                    ToolTip = 'Last Date Of Auto Assigned To Discount Group Changed';
+                    ToolTip = 'CDGA Changed Date';
                 }
             }
         }

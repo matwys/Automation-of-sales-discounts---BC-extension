@@ -4,32 +4,32 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
     {
         addafter(General)
         {
-            group("IMW Auto Assigned Customer Discount Group")
+            group("IMW CDG Automation")
             {
-                Caption = 'Auto Assign Customer Disc. Group';
-                field("IMW Auto Assign Cust.Disc.Gr."; Rec."IMW AA Cust. Disc. Gr.")
+                Caption = 'CDG Automation';
+                field("IMW CDGA Enabled"; Rec."IMW CDGA Enabled")
                 {
-                    Caption = 'Enable AA Customer Disc. Group';
+                    Caption = 'CDGA Enabled';
                     ApplicationArea = All;
-                    ToolTip = 'Turn on/turn of - Enable Auto Assigned Customer Disc. Group Functionality.';
+                    ToolTip = 'Turn on/turn of - Enable CDGA Functionality.';
                 }
-                field("IWM Turnover Period"; Rec."IMW Turnover Period")
+                field("IWM CDGA Sales Period"; Rec."IMW CDGA Sales Period")
                 {
-                    Caption = 'Turnover Threshold Period';
+                    Caption = 'CDGA Sales Period';
                     ApplicationArea = All;
-                    ToolTip = 'Specifies Time Range For turnover Threshold Period.';
+                    ToolTip = 'Specifies CDGA Sales Period.';
                 }
-                field("IWM Validity Period"; Rec."IMW Period Of Validity")
+                field("IMW CDGA Validity Period"; Rec."IMW CDGA Validity Period")
                 {
-                    Caption = 'Validity Period Of Auto Assign';
+                    Caption = 'CDGA Validity Period';
                     ApplicationArea = All;
-                    ToolTip = 'Specifies Validity Period Of Auto Assign.';
+                    ToolTip = 'Specifies CDGA Validity Period.';
                 }
-                field("IMW Status"; Rec."IMW AA Status")
+                field("IMW CDGA Threshold Setup Status"; Rec."IMW CDGA Treshold Setup Status")
                 {
-                    Caption = 'Status Of Auto Assign Disc. Group Setup';
+                    Caption = 'CDGA Threshold Setup Status';
                     ApplicationArea = All;
-                    ToolTip = 'Status of Auto Assign Disc. Group Setup Page.';
+                    ToolTip = 'CDGA Threshold Setup Status';
                     Editable = false;
                 }
             }
