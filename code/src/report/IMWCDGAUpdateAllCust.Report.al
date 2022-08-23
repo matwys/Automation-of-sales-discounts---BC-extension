@@ -48,7 +48,7 @@ report 50001 "IMW CDGA Update All Cust."
                 group(Setup)
                 {
                     Caption = 'CDGA Setup';
-                    field(OnlyInvalidCust; OnlyInvalidCust)
+                    field(OnlyInvalidCustomer; OnlyInvalidCust)
                     {
                         ApplicationArea = All;
                         Caption = 'CDGA Only With Invalid Assigned';
