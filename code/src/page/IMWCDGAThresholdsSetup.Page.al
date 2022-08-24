@@ -5,6 +5,7 @@ page 50001 "IMW CDGA Thresholds Setup"
     PageType = List;
     SourceTable = "IMW CDGA Thresholds Setup";
     UsageCategory = Lists;
+    DelayedInsert = true;
 
 
     layout
@@ -14,18 +15,18 @@ page 50001 "IMW CDGA Thresholds Setup"
             repeater(Groups)
             {
                 Caption = 'Groups';
-                field("Customer Disc. Group Code"; Rec."Code")
+                field("Customer Disc. Group Code"; Rec."Cust. Disc. Group Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Customer Disc. Gruop Code';
-                    Editable = CDGAThresholdSetupStatus;
+                    Editable = not CDGAThresholdSetupStatusIsReleased;
                     ToolTip = 'Specifies a code for the customer discount group.';
                 }
                 field("Threshold Sales Amount"; Rec."Threshold Sales Amount")
                 {
                     ApplicationArea = All;
                     Caption = 'Threshold Sales Amount (LCY)';
-                    Editable = CDGAThresholdSetupStatus;
+                    Editable = not CDGAThresholdSetupStatusIsReleased;
                     ToolTip = 'Specifies A Threshold Sales Amount (LCY) For The Customer Disc. Group.';
                 }
             }
@@ -43,44 +44,36 @@ page 50001 "IMW CDGA Thresholds Setup"
                 {
                     ApplicationArea = All;
                     Caption = 'Release';
-                    Enabled = CDGAThresholdSetupStatus;
+                    Enabled = not CDGAThresholdSetupStatusIsReleased;
                     Image = ReleaseDoc;
                     ToolTip = 'Release the Requirements Auto-ass Disc. Group to the next stage of processing.';
 
                     trigger OnAction()
                     var
-                        SalesReceivablesSetup: Record "Sales & Receivables Setup";
-                        IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
+                        IMWCDGAMgt: Codeunit "IMW CDGA Mgt.";
                     begin
-                        IMWAACustDiscGrMgt.Release();
+                        IMWCDGAMgt.ChangeCDGATHresholdSetupStatusForReleased();
                         CurrPage.Update();
 
-                        SalesReceivablesSetup.Get();
-                        CDGAThresholdSetupStatus := false;
-                        if SalesReceivablesSetup."IMW CDGA Treshold Setup Status" <> SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released then
-                            CDGAThresholdSetupStatus := true;
+                        CDGAThresholdSetupStatusIsReleased := IMWCDGAMgt.CheckCDGAThresholdSetupStatusIsRelease();
                     end;
                 }
                 action("Open")
                 {
                     ApplicationArea = All;
                     Caption = 'Open';
-                    Enabled = not CDGAThresholdSetupStatus;
+                    Enabled = CDGAThresholdSetupStatusIsReleased;
                     Image = ReOpen;
                     ToolTip = 'Reopen the Requirements Auto Assign Disc. Group to change it after it has been approved.';
 
                     trigger OnAction()
                     var
-                        SalesReceivablesSetup: Record "Sales & Receivables Setup";
-                        AutoAssignDiscGrMgt: Codeunit "IMW CDGA Mgt.";
+                        IMWCDGAMgt: Codeunit "IMW CDGA Mgt.";
                     begin
-                        AutoAssignDiscGrMgt.Open();
+                        IMWCDGAMgt.ChangeCDGATHresholdSetupStatusForOpen();
                         CurrPage.Update();
 
-                        SalesReceivablesSetup.Get();
-                        CDGAThresholdSetupStatus := false;
-                        if SalesReceivablesSetup."IMW CDGA Treshold Setup Status" <> SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released then
-                            CDGAThresholdSetupStatus := true;
+                        CDGAThresholdSetupStatusIsReleased := IMWCDGAMgt.CheckCDGAThresholdSetupStatusIsRelease();
                     end;
                 }
             }
@@ -88,7 +81,7 @@ page 50001 "IMW CDGA Thresholds Setup"
             {
                 ApplicationArea = All;
                 Caption = 'CDGA Update All Customers';
-                Enabled = not CDGAThresholdSetupStatus and CDGAEnabled;
+                Enabled = CDGAThresholdSetupStatusIsReleased and CDGAEnabledIsEnabled;
                 Image = ReleaseDoc;
                 ToolTip = 'CDGA Update All Customers by Balance';
 
@@ -102,17 +95,14 @@ page 50001 "IMW CDGA Thresholds Setup"
         }
     }
     var
-        CDGAEnabled: Boolean;
-        CDGAThresholdSetupStatus: Boolean;
+        CDGAEnabledIsEnabled: Boolean;
+        CDGAThresholdSetupStatusIsReleased: Boolean;
 
     trigger OnOpenPage()
     var
-        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        IMWCDGAMgt: Codeunit "IMW CDGA Mgt.";
     begin
-        SalesReceivablesSetup.Get();
-        CDGAThresholdSetupStatus := false;
-        if SalesReceivablesSetup."IMW CDGA Treshold Setup Status" <> SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released then
-            CDGAThresholdSetupStatus := true;
-        CDGAEnabled := SalesReceivablesSetup."IMW CDGA Enabled";
+        CDGAThresholdSetupStatusIsReleased := IMWCDGAMgt.CheckCDGAThresholdSetupStatusIsRelease();
+        CDGAEnabledIsEnabled := IMWCDGAMgt.CheckCDGAEnabledIsEnabled();
     end;
 }

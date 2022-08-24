@@ -15,7 +15,7 @@ page 50002 "IMW CDGA Change Log"
             repeater(History)
             {
                 Caption = 'History';
-                field("No."; Rec."No.")
+                field("Entry No."; Rec."Entry No.")
                 {
                     Caption = 'Entry No.';
                     ApplicationArea = All;
@@ -33,13 +33,16 @@ page 50002 "IMW CDGA Change Log"
                     ApplicationArea = All;
                     ToolTip = 'Customer Disc. Group Code';
                 }
-                field("CDGA Changed By"; Rec."CDGA Changed By")
+                //field("CDGA Changed By"; Rec."CDGA Changed By")
+                field("CDGA Changed By"; Rec.SystemCreatedBy)
                 {
+
                     Caption = 'CDGA Changed By';
                     ApplicationArea = All;
                     ToolTip = 'CDGA Changed By';
                 }
-                field("CDGA Changed Date"; Rec."CDGA Changed Date")
+                //field("CDGA Changed Date"; Rec."CDGA Changed Date")
+                field("CDGA Changed Date"; Rec.SystemCreatedAt)
                 {
                     Caption = 'CDGA Changed Date';
                     ApplicationArea = All;

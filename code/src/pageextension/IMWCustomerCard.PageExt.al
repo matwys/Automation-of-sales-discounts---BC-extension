@@ -4,7 +4,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     {
         modify("Customer Disc. Group")
         {
-            Editable = NOT CDGAEnabled;
+            Editable = NOT CDGAEnabledIsEnabled;
         }
         addafter("Customer Disc. Group")
         {
@@ -14,7 +14,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'CDGA Valid To';
                 Editable = false;
-                Visible = CDGAEnabled;
+                Visible = CDGAEnabledIsEnabled;
             }
             field("IMW CDGA Changed By"; Rec."IMW CDGA Changed By")
             {
@@ -22,7 +22,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'Last CDGA Changed By';
                 Editable = false;
-                Visible = CDGAEnabled;
+                Visible = CDGAEnabledIsEnabled;
             }
             field("IMW CDGA Changed Date"; Rec."IMW CDGA Changed Date")
             {
@@ -30,7 +30,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'Last CDGA Changed Date';
                 Editable = false;
-                Visible = CDGAEnabled;
+                Visible = CDGAEnabledIsEnabled;
             }
         }
     }
@@ -44,8 +44,8 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 Caption = 'CDGA Update Customer';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
-                Enabled = not CDGAThresholdSetupStatus;
-                Visible = CDGAEnabled;
+                Enabled = CDGAThresholdSetupStatusIsReleased;
+                Visible = CDGAEnabledIsEnabled;
                 ToolTip = 'CDGA Update Customer.';
 
                 trigger OnAction()
@@ -64,7 +64,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                 Caption = 'CDGA Change Log';
                 ApplicationArea = All;
                 Image = ReleaseDoc;
-                Visible = CDGAEnabled;
+                Visible = CDGAEnabledIsEnabled;
                 ToolTip = 'View Log About CDGA';
                 RunObject = Page "IMW CDGA Change Log";
                 RunPageLink = "Customer No." = FIELD("No.");
@@ -73,17 +73,14 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     }
 
     var
-        CDGAEnabled: Boolean;
-        CDGAThresholdSetupStatus: Boolean;
+        CDGAEnabledIsEnabled: Boolean;
+        CDGAThresholdSetupStatusIsReleased: Boolean;
 
     trigger OnOpenPage()
     var
-        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        IMWCDGAMgt: Codeunit "IMW CDGA Mgt.";
     begin
-        SalesReceivablesSetup.Get();
-        CDGAThresholdSetupStatus := false;
-        if SalesReceivablesSetup."IMW CDGA Treshold Setup Status" <> SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released then
-            CDGAThresholdSetupStatus := true;
-        CDGAEnabled := SalesReceivablesSetup."IMW CDGA Enabled";
+        CDGAThresholdSetupStatusIsReleased := IMWCDGAMgt.CheckCDGAThresholdSetupStatusIsRelease();
+        CDGAEnabledIsEnabled := IMWCDGAMgt.CheckCDGAEnabledIsEnabled();
     end;
 }

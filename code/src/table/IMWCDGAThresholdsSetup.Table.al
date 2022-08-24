@@ -1,26 +1,26 @@
 table 50001 "IMW CDGA Thresholds Setup"
 {
     DataClassification = CustomerContent;
-    Caption = 'Auto Assign Customer To Disc. Group Setup';
+    Caption = 'CDGA Tresholds Setup';
 
     fields
     {
-        field(1; "Code"; Code[20])
+        field(1; "Cust. Disc. Group Code"; Code[20])
         {
             DataClassification = CustomerContent;
-            Caption = 'Code';
+            Caption = 'Cust. Disc. Group Code';
             TableRelation = "Customer Discount Group";
         }
         field(10; "Threshold Sales Amount"; Decimal)
         {
             DataClassification = CustomerContent;
-            Caption = 'Treshold Amount';
+            Caption = 'Treshold Sales Amount';
         }
     }
 
     keys
     {
-        key(Key1; "Code")
+        key(Key1; "Cust. Disc. Group Code")
         {
             Clustered = true;
         }

@@ -9,19 +9,17 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
 
             trigger OnValidate()
             var
-                IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
+                IMWCDGAMgt: Codeunit "IMW CDGA Mgt.";
             begin
-                if not Rec."IMW CDGA Enabled" then begin
-                    if not Confirm(ChangeEnabledFromTrueQst) then
-                        Rec."IMW CDGA Enabled" := true
-                    else begin
-                        Rec."IMW CDGA Treshold Setup Status" := Rec."IMW CDGA Treshold Setup Status"::Open;
-                        IMWAACustDiscGrMgt.TurnOff();
-                    end;
-                end
-                else
-                    if not Confirm(ChangeEnabledFromFalseQst) then
-                        Rec."IMW CDGA Enabled" := false;
+                if Rec."IMW CDGA Enabled" = xRec."IMW CDGA Enabled" then
+                    exit;
+
+                if Rec."IMW CDGA Enabled" then
+                    IMWCDGAMgt.EnableCDGA()
+                else begin
+                    IMWCDGAMgt.DisableCDGA();
+                    Rec."IMW CDGA Treshold Setup Status" := Rec."IMW CDGA Treshold Setup Status"::Open;
+                end;
             end;
         }
         field(50002; "IMW CDGA Sales Period"; DateFormula)
@@ -34,7 +32,7 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             var
                 OneDayDateFormula: DateFormula;
             begin
-                if not CheckCorectDateMinus(Rec."IMW CDGA Sales Period") then begin
+                if not CheckIfDateFormulaIsInThePast(Rec."IMW CDGA Sales Period") then begin
                     Evaluate(OneDayDateFormula, '-1D');
                     Rec."IMW CDGA Sales Period" := OneDayDateFormula;
                 end;
@@ -50,13 +48,13 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             var
                 OneDayDateFormula: DateFormula;
             begin
-                if not CheckCorectDate(Rec."IMW CDGA Validity Period") then begin
+                if CheckIfDateFormulaIsInThePast(Rec."IMW CDGA Validity Period") then begin
                     Evaluate(OneDayDateFormula, '1D');
                     Rec."IMW CDGA Validity Period" := OneDayDateFormula;
                 end;
             end;
         }
-        field(50004; "IMW CDGA Treshold Setup Status"; Enum "IMW Status")
+        field(50004; "IMW CDGA Treshold Setup Status"; Enum "IMW CDGA Treshold Setup Status")
         {
             Caption = 'CDGA Treshold Setup Status';
             DataClassification = CustomerContent;
@@ -64,18 +62,8 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
 
         }
     }
-    var
-        ChangeEnabledFromTrueQst: Label 'Do you want to disable the CDGA functionality? All CDGA lost validity.';
-        ChangeEnabledFromFalseQst: Label 'Do you want to enable the CDGA functionality?';
 
-    local procedure CheckCorectDate(value: DateFormula): Boolean
-    begin
-        if Today() < CalcDate(value, Today()) then
-            exit(true);
-        exit(false);
-    end;
-
-    local procedure CheckCorectDateMinus(value: DateFormula): Boolean
+    local procedure CheckIfDateFormulaIsInThePast(value: DateFormula): Boolean
     begin
         if Today() > CalcDate(value, Today()) then
             exit(true);

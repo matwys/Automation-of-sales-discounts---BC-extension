@@ -5,7 +5,7 @@ table 50002 "IMW CDGA Change Log"
 
     fields
     {
-        field(1; "No."; Integer)
+        field(1; "Entry No."; Integer)
         {
             AutoIncrement = true;
             Caption = 'Entry No.';
@@ -35,13 +35,12 @@ table 50002 "IMW CDGA Change Log"
             Caption = 'CDGA Changed Date';
             DataClassification = CustomerContent;
             Editable = false;
-
         }
     }
 
     keys
     {
-        key(PK; "No.")
+        key(PK; "Entry No.")
         {
             Clustered = true;
         }

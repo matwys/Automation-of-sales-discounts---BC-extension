@@ -8,12 +8,12 @@ report 50001 "IMW CDGA Update All Cust."
 
     dataset
     {
+
+
         dataitem(Customer; Customer)
         {
             trigger OnPreDataItem()
             begin
-                if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then
-                    exit;
                 if OnlyInvalidCust then
                     Customer.SetFilter(Customer."IMW CDGA Valid To", '<%1', Today());
             end;
@@ -22,18 +22,12 @@ report 50001 "IMW CDGA Update All Cust."
             var
                 IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
             begin
-                if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then
-                    exit;
                 IMWAACustDiscGrMgt.AutoAssignCustomerToDiscGroup(Customer);
                 Counter := Counter + 1;
             end;
 
             trigger OnPostDataItem();
             begin
-                if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then begin
-                    Message(FunctionalityDisableMsg);
-                    exit;
-                end;
                 Message(CountChangesMsg, Counter);
             end;
         }
@@ -63,11 +57,14 @@ report 50001 "IMW CDGA Update All Cust."
         OnlyInvalidCust: Boolean;
         Counter: Integer;
         CountChangesMsg: Label 'Changes: %1', Comment = '%1 Count changes.';
-        FunctionalityDisableMsg: Label 'Customers can not be auto assigned because Auto Assign To Discount Group functionality must be enable and Status must be released.';
+        OnInitErr: Label 'CDGA Threshold Setup Status must be Released and CDGA Enabled must be enabled.';
+
 
     trigger OnInitReport()
     var
     begin
         SalesReceivablesSetup.Get();
+        if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then
+            error(OnInitErr);
     end;
 }
