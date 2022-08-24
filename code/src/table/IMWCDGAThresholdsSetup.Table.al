@@ -29,10 +29,9 @@ table 50001 "IMW CDGA Thresholds Setup"
             Unique = true;
         }
     }
+
     var
         RemoveDiscGroupSetupErr: Label 'Status of Auto Assign To Disc. Group Setup is Released. Record can not be removed.';
-
-
 
     trigger OnDelete()
     var
@@ -42,6 +41,4 @@ table 50001 "IMW CDGA Thresholds Setup"
         if SalesReceivablesSetup."IMW CDGA Treshold Setup Status" <> SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Open then
             Error(RemoveDiscGroupSetupErr);
     end;
-
-
 }

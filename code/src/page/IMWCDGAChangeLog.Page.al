@@ -33,15 +33,13 @@ page 50002 "IMW CDGA Change Log"
                     ApplicationArea = All;
                     ToolTip = 'Customer Disc. Group Code';
                 }
-                //field("CDGA Changed By"; Rec."CDGA Changed By")
-                field("CDGA Changed By"; Rec.SystemCreatedBy)
+                field("CDGA Changed By"; GetUserName(Rec.SystemCreatedBy))
                 {
 
                     Caption = 'CDGA Changed By';
                     ApplicationArea = All;
                     ToolTip = 'CDGA Changed By';
                 }
-                //field("CDGA Changed Date"; Rec."CDGA Changed Date")
                 field("CDGA Changed Date"; Rec.SystemCreatedAt)
                 {
                     Caption = 'CDGA Changed Date';
@@ -51,4 +49,12 @@ page 50002 "IMW CDGA Change Log"
             }
         }
     }
+
+    local procedure GetUserName(Guid: Guid): Code[50]
+    var
+        User: Record User;
+    begin
+        if User.Get(Guid) then
+            exit(User."User Name");
+    end;
 }

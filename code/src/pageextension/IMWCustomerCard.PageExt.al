@@ -53,7 +53,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
                     IMWAACustDiscGrMgt: Codeunit "IMW CDGA Mgt.";
                 begin
                     IMWAACustDiscGrMgt.AutoAssignCustomerToDiscGroup(Rec);
-
+                    Message(CDGAUpdateCustomerMsg);
                 end;
             }
         }
@@ -75,6 +75,7 @@ pageextension 50002 "IMW Customer Card" extends "Customer Card"
     var
         CDGAEnabledIsEnabled: Boolean;
         CDGAThresholdSetupStatusIsReleased: Boolean;
+        CDGAUpdateCustomerMsg: Label 'Assign to Customer Disc. Group has been correctly updated.';
 
     trigger OnOpenPage()
     var

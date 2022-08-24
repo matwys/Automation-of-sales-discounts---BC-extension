@@ -4,9 +4,9 @@ codeunit 50001 "IMW CDGA Mgt."
     var
         ChangeForOpenMsg: Label 'Status is changed for Open. ';
         ChangeForReleasedMsg: Label 'Status is changed for Released.';
-        MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';
         DisableCDGAQst: Label 'Do you want to disable the CDGA functionality? All CDGA lost validity.';
         EnableCDGAQst: Label 'Do you want to enable the CDGA functionality?';
+        MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';
 
     procedure AutoAssignCustomerToDiscGroup(Customer: Record Customer)
     var
@@ -15,13 +15,11 @@ codeunit 50001 "IMW CDGA Mgt."
     begin
         SalesBalanc := CalculateSalesBalance(Customer);
         "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
-
         InsertNewCDGAChangeLog(Customer, "Disc. Group. No.");
-
-        SetDataInCustomer(Customer, "Disc. Group. No.");
+        UpdateCustomerDiscGroup(Customer, "Disc. Group. No.");
     end;
 
-    procedure ChangeCDGATHresholdSetupStatusForOpen()
+    procedure ChangeCDGAThresholdSetupStatusForOpen()
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
@@ -92,7 +90,7 @@ codeunit 50001 "IMW CDGA Mgt."
     begin
         SalesReceivablesSetup.Get();
         CustLedgerEntry.SetRange(CustLedgerEntry."Customer No.", Customer."No.");
-        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '>%1', CalcDate(SalesReceivablesSetup."IMW CDGA Sales Period", Today()));
+        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '>=%1', CalcDate(SalesReceivablesSetup."IMW CDGA Sales Period", Today()));
 
         if CustLedgerEntry.FindSet() then
             repeat
@@ -126,12 +124,10 @@ codeunit 50001 "IMW CDGA Mgt."
         IMWCDGAChangeLog.Init();
         IMWCDGAChangeLog."Customer No." := Customer."No.";
         IMWCDGAChangeLog."Customer Disc. Group Code" := "Disc. Group. No.";
-        IMWCDGAChangeLog."CDGA Changed By" := UserId;
-        IMWCDGAChangeLog."CDGA Changed Date" := Today();
         IMWCDGAChangeLog.Insert();
     end;
 
-    local procedure SetDataInCustomer(Customer: Record Customer; "Disc. Group. No.": Code[20])
+    local procedure UpdateCustomerDiscGroup(Customer: Record Customer; "Disc. Group. No.": Code[20])
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin

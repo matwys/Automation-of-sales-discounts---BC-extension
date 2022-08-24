@@ -13,12 +13,11 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             begin
                 if Rec."IMW CDGA Enabled" = xRec."IMW CDGA Enabled" then
                     exit;
-
                 if Rec."IMW CDGA Enabled" then
                     IMWCDGAMgt.EnableCDGA()
                 else begin
                     IMWCDGAMgt.DisableCDGA();
-                    Rec."IMW CDGA Treshold Setup Status" := Rec."IMW CDGA Treshold Setup Status"::Open;
+                    Rec.Validate("IMW CDGA Treshold Setup Status", Rec."IMW CDGA Treshold Setup Status"::Open);
                 end;
             end;
         }
@@ -59,7 +58,6 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             Caption = 'CDGA Treshold Setup Status';
             DataClassification = CustomerContent;
             InitValue = "open";
-
         }
     }
 

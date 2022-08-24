@@ -21,14 +21,12 @@ codeunit 50002 "IMW CDGA Event"
         IMWCDGAChangeLog.Init();
         IMWCDGAChangeLog."Customer No." := Customer."No.";
         IMWCDGAChangeLog."Customer Disc. Group Code" := "Disc. Group. No.";
-        IMWCDGAChangeLog."CDGA Changed By" := UserId;
-        IMWCDGAChangeLog."CDGA Changed Date" := Today();
         IMWCDGAChangeLog.Insert();
 
         Customer."Customer Disc. Group" := "Disc. Group. No.";
         Customer."IMW CDGA Changed Date" := Today;
         Customer."IMW CDGA Valid To" := CalcDate(SalesReceivablesSetup."IMW CDGA Validity Period", Today());
-        Customer."IMW CDGA Changed By" := UserId;
+        Customer."IMW CDGA Changed By" := UserId.Substring(1, 50);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterValidateEvent', 'Sell-to Customer No.', false, false)]

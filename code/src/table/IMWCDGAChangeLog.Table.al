@@ -22,19 +22,6 @@ table 50002 "IMW CDGA Change Log"
             Caption = 'Customer Disc. Group Code';
             DataClassification = CustomerContent;
             Editable = false;
-
-        }
-        field(12; "CDGA Changed By"; Code[50])
-        {
-            Caption = 'CDGA Changed By';
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
-        field(13; "CDGA Changed Date"; Date)
-        {
-            Caption = 'CDGA Changed Date';
-            DataClassification = CustomerContent;
-            Editable = false;
         }
     }
 
@@ -46,7 +33,6 @@ table 50002 "IMW CDGA Change Log"
         }
         key(Key1; "Customer No.")
         {
-
         }
     }
 }

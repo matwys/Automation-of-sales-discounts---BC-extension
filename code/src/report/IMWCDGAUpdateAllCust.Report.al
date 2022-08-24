@@ -14,7 +14,7 @@ report 50001 "IMW CDGA Update All Cust."
         {
             trigger OnPreDataItem()
             begin
-                if OnlyInvalidCust then
+                if not CDGAIncludeValidAssigned then
                     Customer.SetFilter(Customer."IMW CDGA Valid To", '<%1', Today());
             end;
 
@@ -42,10 +42,10 @@ report 50001 "IMW CDGA Update All Cust."
                 group(Setup)
                 {
                     Caption = 'CDGA Setup';
-                    field(OnlyInvalidCustomer; OnlyInvalidCust)
+                    field(IncludeValidAssigned; CDGAIncludeValidAssigned)
                     {
                         ApplicationArea = All;
-                        Caption = 'CDGA Only With Invalid Assigned';
+                        Caption = 'CDGA Include Valid Assigned';
                         ToolTip = 'Customers With Only Invalid Assign Will Be Assigned.';
                     }
                 }
@@ -54,9 +54,9 @@ report 50001 "IMW CDGA Update All Cust."
     }
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
-        OnlyInvalidCust: Boolean;
+        CDGAIncludeValidAssigned: Boolean;
         Counter: Integer;
-        CountChangesMsg: Label 'Changes: %1', Comment = '%1 Count changes.';
+        CountChangesMsg: Label 'Customer Disc. Group hav been updated for: %1 customers', Comment = '%1 Count changes.';
         OnInitErr: Label 'CDGA Threshold Setup Status must be Released and CDGA Enabled must be enabled.';
 
 
@@ -65,6 +65,6 @@ report 50001 "IMW CDGA Update All Cust."
     begin
         SalesReceivablesSetup.Get();
         if not (SalesReceivablesSetup."IMW CDGA Enabled" and (SalesReceivablesSetup."IMW CDGA Treshold Setup Status" = SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released)) then
-            error(OnInitErr);
+            Error(OnInitErr);
     end;
 }

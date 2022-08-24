@@ -70,27 +70,30 @@ page 50001 "IMW CDGA Thresholds Setup"
                     var
                         IMWCDGAMgt: Codeunit "IMW CDGA Mgt.";
                     begin
-                        IMWCDGAMgt.ChangeCDGATHresholdSetupStatusForOpen();
+                        IMWCDGAMgt.ChangeCDGAThresholdSetupStatusForOpen();
                         CurrPage.Update();
 
                         CDGAThresholdSetupStatusIsReleased := IMWCDGAMgt.CheckCDGAThresholdSetupStatusIsRelease();
                     end;
                 }
             }
-            action("CDGA Update All Customers")
+            group("Report")
             {
-                ApplicationArea = All;
-                Caption = 'CDGA Update All Customers';
-                Enabled = CDGAThresholdSetupStatusIsReleased and CDGAEnabledIsEnabled;
-                Image = ReleaseDoc;
-                ToolTip = 'CDGA Update All Customers by Balance';
+                action("CDGA Update All Customers")
+                {
+                    ApplicationArea = All;
+                    Caption = 'CDGA Update All Customers';
+                    Enabled = CDGAThresholdSetupStatusIsReleased and CDGAEnabledIsEnabled;
+                    Image = ReleaseDoc;
+                    ToolTip = 'CDGA Update All Customers by Balance';
 
-                trigger OnAction()
-                var
-                    IMWAutoAssCustDiscGr: Report "IMW CDGA Update All Cust.";
-                begin
-                    IMWAutoAssCustDiscGr.Run();
-                end;
+                    trigger OnAction()
+                    var
+                        IMWAutoAssCustDiscGr: Report "IMW CDGA Update All Cust.";
+                    begin
+                        IMWAutoAssCustDiscGr.Run();
+                    end;
+                }
             }
         }
     }
