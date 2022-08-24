@@ -1,5 +1,10 @@
 codeunit 50002 "IMW CDGA Event"
 {
+
+    var
+        NewSalesDocumentErr: Label 'Customer has invalid assign to Disc. Group. Run action CDGA Update Customer for this Customer.';
+        RemoveDiscGroupErr: Label 'Position in CDGA Thresholds Setup page must be removed before delete Customer Disc. Group.';
+
     [EventSubscriber(ObjectType::Table, Database::Customer, 'OnAfterOnInsert', '', false, false)]
     local procedure OnAfterOnInsert(var Customer: Record Customer; xCustomer: Record Customer)
     var
@@ -26,16 +31,6 @@ codeunit 50002 "IMW CDGA Event"
         Customer."IMW CDGA Changed By" := UserId;
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Customer Discount Group", 'OnBeforeDeleteEvent', '', false, false)]
-    local procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
-    var
-        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
-    begin
-        IMWCDGAThresholdsSetup.SetRange(IMWCDGAThresholdsSetup."Cust. Disc. Group Code", Rec.Code);
-        if IMWCDGAThresholdsSetup.Count > 0 then
-            Error(RemoveDiscGroupErr);
-    end;
-
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnAfterValidateEvent', 'Sell-to Customer No.', false, false)]
     local procedure OnAfterValidateEventSalesHeader(var Rec: Record "Sales Header")
     var
@@ -49,7 +44,13 @@ codeunit 50002 "IMW CDGA Event"
                 Error(NewSalesDocumentErr);
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Customer Discount Group", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
     var
-        NewSalesDocumentErr: Label 'Customer has invalid assign to Disc. Group. Run action CDGA Update Customer for this Customer.';
-        RemoveDiscGroupErr: Label 'Position in CDGA Thresholds Setup page must be removed before delete Customer Disc. Group.';
+        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
+    begin
+        IMWCDGAThresholdsSetup.SetRange(IMWCDGAThresholdsSetup."Cust. Disc. Group Code", Rec.Code);
+        if IMWCDGAThresholdsSetup.Count > 0 then
+            Error(RemoveDiscGroupErr);
+    end;
 }
