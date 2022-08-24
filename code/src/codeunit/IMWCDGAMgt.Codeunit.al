@@ -7,6 +7,8 @@ codeunit 50001 "IMW CDGA Mgt."
         DisableCDGAQst: Label 'Do you want to disable the CDGA functionality? All CDGA lost validity.';
         EnableCDGAQst: Label 'Do you want to enable the CDGA functionality?';
         MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';
+        NewSalesDocumentErr: Label 'Customer has invalid assign to Disc. Group. Run action CDGA Update Customer for this Customer.';
+        RemoveDiscGroupErr: Label 'Position in CDGA Thresholds Setup page must be removed before delete Customer Disc. Group.';
 
     procedure AutoAssignCustomerToDiscGroup(Customer: Record Customer)
     var
@@ -80,6 +82,49 @@ codeunit 50001 "IMW CDGA Mgt."
         IMWCDGAThresholdsSetup.SetCurrentKey("Threshold Sales Amount");
         IMWCDGAThresholdsSetup.FindLast();
         exit(IMWCDGAThresholdsSetup."Cust. Disc. Group Code");
+    end;
+
+    procedure OnAfterOnInsertCustomer(var Customer: Record Customer)
+    var
+        IMWCDGAChangeLog: Record "IMW CDGA Change Log";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        "Disc. Group. No.": Code[20];
+    begin
+        SalesReceivablesSetup.Get();
+        if not ((SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released = SalesReceivablesSetup."IMW CDGA Treshold Setup Status") and SalesReceivablesSetup."IMW CDGA Enabled") then
+            exit;
+
+        "Disc. Group. No." := FindGroupForCustomer(0);
+        IMWCDGAChangeLog.Init();
+        IMWCDGAChangeLog."Customer No." := Customer."No.";
+        IMWCDGAChangeLog."Customer Disc. Group Code" := "Disc. Group. No.";
+        IMWCDGAChangeLog.Insert();
+
+        Customer."Customer Disc. Group" := "Disc. Group. No.";
+        Customer."IMW CDGA Changed Date" := Today;
+        Customer."IMW CDGA Valid To" := CalcDate(SalesReceivablesSetup."IMW CDGA Validity Period", Today());
+        Customer."IMW CDGA Changed By" := UserId;
+    end;
+
+    procedure OnAfterValidateEventSalesHeader(var Rec: Record "Sales Header")
+    var
+        Customer: Record Customer;
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        SalesReceivablesSetup.Get();
+        Customer.get(Rec."Sell-to Customer No.");
+        if SalesReceivablesSetup."IMW CDGA Enabled" then
+            if Customer."IMW CDGA Valid To" < Today() then
+                Error(NewSalesDocumentErr);
+    end;
+
+    procedure OnBeforeDeleteEvent(var Rec: Record "Customer Discount Group")
+    var
+        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
+    begin
+        IMWCDGAThresholdsSetup.SetRange(IMWCDGAThresholdsSetup."Cust. Disc. Group Code", Rec.Code);
+        if IMWCDGAThresholdsSetup.Count > 0 then
+            Error(RemoveDiscGroupErr);
     end;
 
     local procedure CalculateSalesBalance(Customer: Record Customer): Decimal
