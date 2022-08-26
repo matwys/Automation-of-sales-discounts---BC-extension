@@ -59,6 +59,11 @@ tableextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivable
             DataClassification = CustomerContent;
             InitValue = "open";
         }
+        field(50005; "IMW CDGA Find Group By"; Enum "IMW CDGA Find Group By")
+        {
+            Caption = 'IMW CDGA Find Group By';
+            DataClassification = CustomerContent;
+        }
     }
 
     local procedure CheckIfDateFormulaIsInThePast(value: DateFormula): Boolean

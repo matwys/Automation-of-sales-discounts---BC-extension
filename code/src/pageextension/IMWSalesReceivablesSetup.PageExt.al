@@ -32,6 +32,12 @@ pageextension 50001 "IMW Sales & Receivables Setup" extends "Sales & Receivables
                     ToolTip = 'CDGA Threshold Setup Status';
                     Editable = false;
                 }
+                field("IMW CDGA Find Group By"; Rec."IMW CDGA Find Group By")
+                {
+                    Caption = 'CDGA Find Group By';
+                    ApplicationArea = All;
+                    ToolTip = 'CDGA Find Group By';
+                }
             }
         }
     }
