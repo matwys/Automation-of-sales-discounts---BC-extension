@@ -15,7 +15,7 @@ codeunit 50001 "IMW CDGA Mgt."
         "Disc. Group. No.": Code[20];
         SalesBalanc: Decimal;
     begin
-        SalesBalanc := CalculateSalesBalance(Customer);
+        SalesBalanc := CalcSalesBalance(Customer);
         "Disc. Group. No." := FindGroupForCustomer(SalesBalanc);
         InsertNewCDGAChangeLog(Customer, "Disc. Group. No.");
         UpdateCustomerDiscGroup(Customer, "Disc. Group. No.");
@@ -142,6 +142,16 @@ codeunit 50001 "IMW CDGA Mgt."
                 SalesBalanc := SalesBalanc + CustLedgerEntry."Sales (LCY)";
             until CustLedgerEntry.Next() = 0;
         exit(SalesBalanc);
+    end;
+
+    local procedure CalcSalesBalance(Customer: Record Customer): Decimal
+    var
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        SalesReceivablesSetup.Get();
+        Customer.SETFILTER("Date Filter", '%1..%2', CalcDate(SalesReceivablesSetup."IMW CDGA Sales Period", Today()), Today());
+        Customer.CalcFields(Customer."Sales (LCY)");
+        exit(Customer."Sales (LCY)");
     end;
 
     local procedure CheckOnlyOneZero(): Boolean
