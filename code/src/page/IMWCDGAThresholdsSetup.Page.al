@@ -29,6 +29,13 @@ page 50001 "IMW CDGA Thresholds Setup"
                     Editable = not CDGAThresholdSetupStatusIsReleased;
                     ToolTip = 'Specifies A Threshold Sales Amount (LCY) For The Customer Disc. Group.';
                 }
+                field("Threshold Entries Count"; Rec."Threshold Entries Count")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Threshold Entries Count';
+                    Editable = not CDGAThresholdSetupStatusIsReleased;
+                    ToolTip = 'Specifies A Threshold Entries Count For The Customer Disc. Group.';
+                }
             }
         }
     }

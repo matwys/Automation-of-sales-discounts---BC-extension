@@ -33,6 +33,12 @@ page 50002 "IMW CDGA Change Log"
                     ApplicationArea = All;
                     ToolTip = 'Customer Disc. Group Code';
                 }
+                field("Method Of Find Group By"; "Method Of Find Group By")
+                {
+                    Caption = 'Method Of Find Group By';
+                    ApplicationArea = All;
+                    ToolTip = 'Method Of Find Group By';
+                }
                 field("CDGA Changed By"; GetUserName(Rec.SystemCreatedBy))
                 {
 

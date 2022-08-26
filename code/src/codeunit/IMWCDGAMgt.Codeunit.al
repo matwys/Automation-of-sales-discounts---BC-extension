@@ -6,7 +6,8 @@ codeunit 50001 "IMW CDGA Mgt."
         ChangeForReleasedMsg: Label 'Status is changed for Released.';
         DisableCDGAQst: Label 'Do you want to disable the CDGA functionality? All CDGA lost validity.';
         EnableCDGAQst: Label 'Do you want to enable the CDGA functionality?';
-        MissingZeroMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Amount.';
+        MissingZeroSalesAmountMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Sales Amount.';
+        MissingZeroEntriesCountMsg: Label 'Status is not changed. Only one record must have 0 in Threshold Entries Count.';
         NewSalesDocumentErr: Label 'Customer has invalid assign to Disc. Group. Run action CDGA Update Customer for this Customer.';
         RemoveDiscGroupErr: Label 'Position in CDGA Thresholds Setup page must be removed before delete Customer Disc. Group.';
 
@@ -36,8 +37,10 @@ codeunit 50001 "IMW CDGA Mgt."
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
-        if not CheckOnlyOneZero() then
-            Error(MissingZeroMsg);
+        if not CheckOnlyOneZeroThresholdSalesAmount() then
+            Error(MissingZeroSalesAmountMsg);
+        if not CheckOnlyOneZeroThresholdEntriesCount() then
+            Error(MissingZeroEntriesCountMsg);
 
         SalesReceivablesSetup.Get();
         SalesReceivablesSetup.Validate("IMW CDGA Treshold Setup Status", SalesReceivablesSetup."IMW CDGA Treshold Setup Status"::Released);
@@ -83,6 +86,14 @@ codeunit 50001 "IMW CDGA Mgt."
         exit(FindGroupForCustomerBySalesBalance(SalesBalance));
     end;
 
+    procedure FindCustomerDiscGroupByEnriesCount(Customer: Record Customer): Code[20]
+    var
+        EntriesCount: Integer;
+    begin
+        EntriesCount := CalcEntiesCount(Customer);
+        exit(FindGroupForCustomerByEntriesCount(EntriesCount));
+    end;
+
     procedure OnAfterOnInsertCustomer(var Customer: Record Customer)
     var
         IMWCDGAChangeLog: Record "IMW CDGA Change Log";
@@ -99,6 +110,7 @@ codeunit 50001 "IMW CDGA Mgt."
         IMWCDGAChangeLog.Init();
         IMWCDGAChangeLog."Customer No." := Customer."No.";
         IMWCDGAChangeLog."Customer Disc. Group Code" := "Disc. Group. No.";
+        IMWCDGAChangeLog."Method Of Find Group By" := SalesReceivablesSetup."IMW CDGA Find Group By";
         IMWCDGAChangeLog.Insert();
 
         Customer."Customer Disc. Group" := "Disc. Group. No.";
@@ -138,11 +150,38 @@ codeunit 50001 "IMW CDGA Mgt."
         exit(Customer."Sales (LCY)");
     end;
 
-    local procedure CheckOnlyOneZero(): Boolean
+    local procedure CalcEntiesCount(Customer: Record Customer): Integer
+    var
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
+        CustLedgerEntry: Record "Cust. Ledger Entry";
+        Counter: Integer;
+    begin
+        Counter := 0;
+        SalesReceivablesSetup.Get();
+        CustLedgerEntry.SetRange(CustLedgerEntry."Customer No.", Customer."No.");
+        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '>=%1', CalcDate(SalesReceivablesSetup."IMW CDGA Sales Period", Today()));
+        CustLedgerEntry.SetFilter(CustLedgerEntry."Posting Date", '<=%1', Today());
+        CustLedgerEntry.SetRange(CustLedgerEntry."Document Type", CustLedgerEntry."Document Type"::Invoice);
+        if CustLedgerEntry.FindSet() then
+            repeat
+                Counter := Counter + 1;
+            until CustLedgerEntry.Next() = 0;
+        Exit(Counter);
+    end;
+
+    local procedure CheckOnlyOneZeroThresholdSalesAmount(): Boolean
     var
         IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
     begin
         IMWCDGAThresholdsSetup.SetRange("Threshold Sales Amount", 0);
+        exit(IMWCDGAThresholdsSetup.Count = 1);
+    end;
+
+    local procedure CheckOnlyOneZeroThresholdEntriesCount(): Boolean
+    var
+        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
+    begin
+        IMWCDGAThresholdsSetup.SetRange("Threshold Entries Count", 0);
         exit(IMWCDGAThresholdsSetup.Count = 1);
     end;
 
@@ -166,6 +205,16 @@ codeunit 50001 "IMW CDGA Mgt."
         exit(IMWCDGAThresholdsSetup."Cust. Disc. Group Code");
     end;
 
+    local procedure FindGroupForCustomerByEntriesCount(EntriesCount: Integer): Code[20]
+    var
+        IMWCDGAThresholdsSetup: Record "IMW CDGA Thresholds Setup";
+    begin
+        IMWCDGAThresholdsSetup.SetFilter(IMWCDGAThresholdsSetup."Threshold Entries Count", '<=%1', EntriesCount);
+        IMWCDGAThresholdsSetup.SetCurrentKey("Threshold Entries Count");
+        IMWCDGAThresholdsSetup.FindLast();
+        exit(IMWCDGAThresholdsSetup."Cust. Disc. Group Code");
+    end;
+
     local procedure GroupFindByProviderFactory(var iGroupFindByProvider: Interface "IMW CDGA IGroupProvider"): Interface "IMW CDGA IGroupProvider"
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
@@ -178,10 +227,13 @@ codeunit 50001 "IMW CDGA Mgt."
     local procedure InsertNewCDGAChangeLog(Customer: Record Customer; "Disc. Group. No.": Code[20])
     var
         IMWCDGAChangeLog: Record "IMW CDGA Change Log";
+        SalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
+        SalesReceivablesSetup.Get();
         IMWCDGAChangeLog.Init();
         IMWCDGAChangeLog."Customer No." := Customer."No.";
         IMWCDGAChangeLog."Customer Disc. Group Code" := "Disc. Group. No.";
+        IMWCDGAChangeLog."Method Of Find Group By" := SalesReceivablesSetup."IMW CDGA Find Group By";
         IMWCDGAChangeLog.Insert();
     end;
 

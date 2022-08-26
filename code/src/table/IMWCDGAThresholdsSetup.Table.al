@@ -16,6 +16,11 @@ table 50001 "IMW CDGA Thresholds Setup"
             DataClassification = CustomerContent;
             Caption = 'Treshold Sales Amount';
         }
+        field(11; "Threshold Entries Count"; Integer)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Threshold Entries Count';
+        }
     }
 
     keys
@@ -25,6 +30,10 @@ table 50001 "IMW CDGA Thresholds Setup"
             Clustered = true;
         }
         key(Key2; "Threshold Sales Amount")
+        {
+            Unique = true;
+        }
+        key(Key3; "Threshold Entries Count")
         {
             Unique = true;
         }

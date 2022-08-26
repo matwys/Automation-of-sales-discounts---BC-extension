@@ -23,6 +23,12 @@ table 50002 "IMW CDGA Change Log"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(12; "Method Of Find Group By"; Enum "IMW CDGA Find Group By")
+        {
+            Caption = 'Method Of Find Group By';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 
     keys
